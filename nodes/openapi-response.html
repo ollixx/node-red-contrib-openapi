@@ -1,0 +1,57 @@
+<script type="text/javascript">
+  RED.nodes.registerType("openapi-response", {
+    category: "network",
+    color: "#a6d9f7",
+    defaults: {
+      name: { value: "" },
+      server: { value: "", type: "openapi-config", required: true },
+      validation: { value: "warn" },
+      errorFormat: { value: "problem" },
+      defaultStatus: { value: 200, validate: RED.validators.number() }
+    },
+    inputs: 1,
+    outputs: 0,
+    align: "right",
+    icon: "white-globe.png",
+    label: function () {
+      return this.name || "openapi response";
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="openapi-response">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="(optional)">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server"><i class="fa fa-book"></i> Spec</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-validation"><i class="fa fa-check"></i> Validation</label>
+    <select id="node-input-validation">
+      <option value="strict">Strict (invalid → 500)</option>
+      <option value="warn">Warn (send + log)</option>
+      <option value="off">Off</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-errorFormat"><i class="fa fa-exclamation-circle"></i> Error format</label>
+    <select id="node-input-errorFormat">
+      <option value="problem">RFC 7807 (problem+json)</option>
+      <option value="plain">Plain JSON</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-defaultStatus"><i class="fa fa-hashtag"></i> Default status</label>
+    <input type="text" id="node-input-defaultStatus" placeholder="200" style="width:80px">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="openapi-response">
+  <p>Sends the HTTP response for an <b>openapi-in</b> request. Set <code>msg.statusCode</code> and
+  <code>msg.payload</code> for a success response, or set <code>msg.error</code> to emit a
+  spec-shaped error (RFC 7807 problem+json by default). The body is validated against the spec's
+  response schema according to the selected validation mode.</p>
+</script>

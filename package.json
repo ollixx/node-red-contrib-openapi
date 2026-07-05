@@ -1,0 +1,42 @@
+{
+  "name": "node-red-contrib-openapi",
+  "version": "0.1.0",
+  "description": "OpenAPI-first HTTP server nodes for Node-RED: implement, validate and secure endpoints straight from an OpenAPI spec.",
+  "keywords": [
+    "node-red",
+    "openapi",
+    "swagger",
+    "http",
+    "rest",
+    "api",
+    "validation"
+  ],
+  "license": "MIT",
+  "author": "ollix",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "mocha test/**/*_spec.js --timeout 10000"
+  },
+  "node-red": {
+    "version": ">=3.0.0",
+    "nodes": {
+      "openapi-config": "nodes/openapi-config.js",
+      "openapi-auth": "nodes/openapi-auth.js",
+      "openapi-in": "nodes/openapi-in.js",
+      "openapi-response": "nodes/openapi-response.js"
+    }
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.7.3",
+    "node-red-node-test-helper": "^0.3.4",
+    "supertest": "^7.0.0"
+  }
+}

@@ -1,0 +1,86 @@
+<script type="text/javascript">
+  RED.nodes.registerType("openapi-config", {
+    category: "config",
+    defaults: {
+      name: { value: "" },
+      source: { value: "inline" },
+      inline: { value: "" },
+      file: { value: "" },
+      url: { value: "" },
+      contextKey: { value: "" },
+      contextStore: { value: "" },
+      auth: { value: "", type: "openapi-auth", required: false },
+      metaJson: { value: true },
+      metaYaml: { value: true },
+      metaDocs: { value: true }
+    },
+    label: function () {
+      return this.name || "openapi spec";
+    },
+    oneditprepare: function () {
+      function toggle() {
+        const s = $("#node-config-input-source").val();
+        $(".oa-src").hide();
+        $(".oa-src-" + s).show();
+      }
+      $("#node-config-input-source").on("change", toggle);
+      toggle();
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="openapi-config">
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" placeholder="My API">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-source"><i class="fa fa-download"></i> Source</label>
+    <select id="node-config-input-source">
+      <option value="inline">Inline (JSON/YAML)</option>
+      <option value="file">File path</option>
+      <option value="url">URL</option>
+      <option value="context">Flow/Global context</option>
+    </select>
+  </div>
+  <div class="form-row oa-src oa-src-inline">
+    <label style="vertical-align:top" for="node-config-input-inline"><i class="fa fa-file-code-o"></i> Spec</label>
+    <textarea id="node-config-input-inline" rows="12" style="width:70%;font-family:monospace"
+      placeholder='{ "openapi": "3.0.0", ... }'></textarea>
+  </div>
+  <div class="form-row oa-src oa-src-file">
+    <label for="node-config-input-file"><i class="fa fa-folder-open-o"></i> File</label>
+    <input type="text" id="node-config-input-file" placeholder="/data/openapi.yaml">
+  </div>
+  <div class="form-row oa-src oa-src-url">
+    <label for="node-config-input-url"><i class="fa fa-link"></i> URL</label>
+    <input type="text" id="node-config-input-url" placeholder="https://example.com/openapi.json">
+  </div>
+  <div class="form-row oa-src oa-src-context">
+    <label for="node-config-input-contextKey"><i class="fa fa-database"></i> Context key</label>
+    <input type="text" id="node-config-input-contextKey" placeholder="global.mySpec">
+  </div>
+  <div class="form-row oa-src oa-src-context">
+    <label for="node-config-input-contextStore">Store</label>
+    <input type="text" id="node-config-input-contextStore" placeholder="(default)">
+  </div>
+
+  <hr>
+  <div class="form-row">
+    <label for="node-config-input-auth"><i class="fa fa-lock"></i> Auth</label>
+    <input type="text" id="node-config-input-auth">
+  </div>
+  <div class="form-row">
+    <label><i class="fa fa-globe"></i> Meta endpoints</label>
+    <label style="width:auto;margin-right:12px"><input type="checkbox" id="node-config-input-metaJson" style="width:auto"> openapi.json</label>
+    <label style="width:auto;margin-right:12px"><input type="checkbox" id="node-config-input-metaYaml" style="width:auto"> openapi.yaml</label>
+    <label style="width:auto"><input type="checkbox" id="node-config-input-metaDocs" style="width:auto"> /docs</label>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="openapi-config">
+  <p>Holds an OpenAPI specification and shares it with the openapi-in / openapi-response nodes.
+  Supports inline, file, URL and context sources, dereferences <code>$ref</code>s, validates the
+  document, and (optionally) serves <code>openapi.json</code>, <code>openapi.yaml</code> and a Swagger-UI
+  docs page.</p>
+</script>

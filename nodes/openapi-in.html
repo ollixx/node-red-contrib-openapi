@@ -1,0 +1,83 @@
+<script type="text/javascript">
+  RED.nodes.registerType("openapi-in", {
+    category: "network",
+    color: "#a6d9f7",
+    defaults: {
+      name: { value: "" },
+      server: { value: "", type: "openapi-config", required: true },
+      operation: { value: "", required: true },
+      onError: { value: "respond" }
+    },
+    inputs: 0,
+    outputs: 2,
+    outputLabels: ["request", "error"],
+    icon: "white-globe.png",
+    label: function () {
+      return this.name || this.operation || "openapi in";
+    },
+    oneditprepare: function () {
+      const node = this;
+      const $op = $("#node-input-operation");
+
+      function loadOps() {
+        const serverId = $("#node-input-server").val();
+        $op.empty();
+        if (!serverId || serverId === "_ADD_") {
+          $op.append($("<option>").val("").text("(select a spec first)"));
+          return;
+        }
+        $.getJSON("openapi-config/" + serverId + "/operations", function (data) {
+          if (!data.ready) {
+            $op.append($("<option>").val(node.operation || "").text(
+              node.operation ? node.operation + " (spec not loaded)" : "(spec not loaded — deploy first)"));
+            return;
+          }
+          data.operations.forEach(function (o) {
+            const label = o.method + " " + o.path + (o.summary ? " — " + o.summary : "");
+            $op.append($("<option>").val(o.operationId).text(label));
+          });
+          if (node.operation) $op.val(node.operation);
+        }).fail(function () {
+          $op.append($("<option>").val(node.operation || "").text("(could not load operations)"));
+        });
+      }
+
+      $("#node-input-server").on("change", loadOps);
+      loadOps();
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="openapi-in">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="(optional)">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server"><i class="fa fa-book"></i> Spec</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-operation"><i class="fa fa-random"></i> Operation</label>
+    <select id="node-input-operation" style="width:70%"></select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-onError"><i class="fa fa-exclamation-triangle"></i> On error</label>
+    <select id="node-input-onError">
+      <option value="respond">Respond 400/401 automatically</option>
+      <option value="output">Send to error output</option>
+    </select>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="openapi-in">
+  <p>Implements one operation of the OpenAPI spec. Registers the route on Node-RED's HTTP server,
+  authenticates and validates the incoming request against the spec, and emits a normalized message.</p>
+  <h3>Outputs</h3>
+  <ol class="node-ports">
+    <li>request — validated <code>msg</code> with <code>payload</code>, <code>parameters</code>,
+      <code>auth</code>, <code>openapi</code>, <code>req</code>, <code>res</code>.</li>
+    <li>error — validation/auth failures (only when "On error" = error output).</li>
+  </ol>
+  <p>Pair with an <b>openapi-response</b> node to send the reply.</p>
+</script>

@@ -1,0 +1,60 @@
+[
+  {
+    "id": "cfg1",
+    "type": "openapi-config",
+    "name": "Petstore",
+    "source": "file",
+    "file": "examples/petstore.json",
+    "metaJson": true,
+    "metaYaml": true,
+    "metaDocs": true,
+    "auth": "auth1"
+  },
+  {
+    "id": "auth1",
+    "type": "openapi-auth",
+    "name": "Petstore auth",
+    "mode": "enforce"
+  },
+  {
+    "id": "getpet_in",
+    "type": "openapi-in",
+    "z": "flow1",
+    "name": "GET /pets/{petId}",
+    "server": "cfg1",
+    "operation": "getPet",
+    "onError": "respond",
+    "x": 180,
+    "y": 120,
+    "wires": [["getpet_fn"], []]
+  },
+  {
+    "id": "getpet_fn",
+    "type": "function",
+    "z": "flow1",
+    "name": "lookup pet",
+    "func": "const id = msg.parameters.path.petId;\nif (id === 7) {\n  msg.statusCode = 200;\n  msg.payload = { id: 7, name: 'Rex', tag: 'dog' };\n} else {\n  msg.error = { statusCode: 404, title: 'Not Found', detail: 'no pet ' + id };\n}\nreturn msg;",
+    "outputs": 1,
+    "x": 420,
+    "y": 120,
+    "wires": [["getpet_resp"]]
+  },
+  {
+    "id": "getpet_resp",
+    "type": "openapi-response",
+    "z": "flow1",
+    "name": "",
+    "server": "cfg1",
+    "validation": "warn",
+    "errorFormat": "problem",
+    "defaultStatus": 200,
+    "x": 640,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "flow1",
+    "type": "tab",
+    "label": "OpenAPI Petstore"
+  }
+]
