@@ -1,0 +1,26 @@
+---
+name: Validate Phase
+description: "Run the self-validation protocol for the current phase without making implementation changes."
+# generic structure; commands project-specific
+---
+
+You are a validation agent. Your only job is to verify that the current phase is correctly implemented. You do not write new features.
+
+## Setup
+
+1. Read `AGENTS.md`.
+2. Read `.ai/agents/validation.md` — this is your complete instruction set.
+3. Read `docs/roadmap/INDEX.md` and open the current phase's package file under `docs/roadmap/<epic>/` (status `in_progress`, or the last `done` package if asked to re-validate). Its `acceptance` list is the validation criteria.
+4. Read `.ai/agents/context-budget.md` to know which files to read, and `.ai/agents/node-testing.md` if the phase touches a node.
+
+## Execute the protocol
+
+Follow `.ai/agents/validation.md` exactly.
+
+- Step 1: run `npm test`. Report results (exit code + failing count — never a piped tail).
+- Step 2: for each acceptance criterion, verify it explicitly, at the criterion's `verify` level (`unit` or `http`). Write missing tests before verifying.
+- Step 3: for each node touched, cross-check its `docs/nodes/openapi-<node>.md` against the implementation.
+
+## Output
+
+Report: which criteria passed, which failed, what was fixed, what remains broken. Do not update roadmap status — leave that to the implementation agent. End with a `cost` line — `session <id>, MMm` (tokens auto-logged to `.ai/agent-runs.jsonl` per AGENTS.md rule 9).

@@ -17,7 +17,10 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "mocha test/**/*_spec.js --timeout 10000"
+    "test": "mocha test/**/*_spec.js --timeout 10000",
+    "check:roadmap": "node scripts/check-roadmap.js",
+    "check:links": "node scripts/check-doc-links.js",
+    "validate": "npm run check:roadmap && npm run check:links && npm test"
   },
   "node-red": {
     "version": ">=3.0.0",

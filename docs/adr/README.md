@@ -1,0 +1,16 @@
+# Architecture Decision Records
+
+Each ADR captures one decision that changes contracts, module boundaries, or adds a
+body of work. Format: **Status, Date, Context, Decision, Consequences** (see any file
+here). Numbering is sequential (`NNNN-<slug>.md`). A decision that reverses an earlier
+one carries a `Supersedes:` line and says in Consequences which earlier decision no
+longer holds.
+
+ADRs are written by the **`evolve-roadmap`** role
+([`.ai/prompts/evolve-roadmap.prompt.md`](../../.ai/prompts/evolve-roadmap.prompt.md)),
+which then derives roadmap packages from the decision. Roadmap packages reference the
+ADR that motivated them.
+
+| ADR | Decision |
+|---|---|
+| [0001](0001-auth-config-not-separate-node.md) | Auth is configured **in** the config node, not as a separate `openapi-auth` node. |
