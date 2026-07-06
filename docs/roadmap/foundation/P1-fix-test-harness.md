@@ -13,7 +13,7 @@ acceptance:
   - "package.json devDependencies enthält `node-red` (passende Major-Version zu node-red-node-test-helper)."
 verify: unit
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P1 — Test-Harness reparieren
