@@ -30,11 +30,24 @@ This is the test counterpart to the node **requirement docs** under
 - **Unit tests** (plain mocha, no Node-RED) for the pure `lib/` logic a node relies
   on: `spec-loader`, `validator`, `auth`, `routing`. Fast, dependency-light.
 - **Integration tests** via `node-red-node-test-helper`: load the real node(s) into a
-  test Node-RED, drive HTTP with `supertest` (`helper.request()`), assert status +
-  body. This is how route registration, validation, auth, meta endpoints, and the
-  message contract are proven.
+  test Node-RED, drive HTTP with `supertest`, assert status + body. This is how route
+  registration, validation, auth, meta endpoints, and the message contract are proven.
 
 We do **not** use a browser or Playwright — there is nothing to render.
+
+**Reaching httpNode routes — use `test/helpers/http-node.js`, not `helper.request()`.**
+`helper.request()` targets the helper's **admin** app, so it 404s on every
+`openapi-*` operation/meta route (those register on `RED.httpNode`, which the helper
+never mounts on a server). Drive httpNode routes via the shared helper:
+
+```js
+const { httpNodeRequest } = require("./helpers/http-node");
+// after helper.load(...) — routes register during load:
+httpNodeRequest().get("/api/v1/openapi.json").expect(200);
+```
+
+`helper.request()` is still correct for **httpAdmin** endpoints (e.g. the
+`openapi-config` operations-list endpoint used by the editor dropdown).
 
 ## Per-node test flow construction
 

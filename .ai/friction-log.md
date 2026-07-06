@@ -8,3 +8,4 @@ audit blind, so append before you finish a run.
 Format: `YYYY-MM-DD <phase/role> — <what misled you or cost rework> — <suggested fix>`
 
 <!-- append below this line -->
+2026-07-06 P1 — node-red-node-test-helper's `helper.request()` targets the admin app, so httpNode routes (all openapi-* operation/meta routes) 404; cost a debug cycle to discover the app is only reachable via `_registryUtil.createNodeApi().httpNode`. Fixed by centralising in `test/helpers/http-node.js` and correcting node-testing.md, which had wrongly said to use `helper.request()`.

@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "mocha": "^10.7.3",
+    "node-red": "^4.0.0",
     "node-red-node-test-helper": "^0.3.4",
     "supertest": "^7.0.0"
   }

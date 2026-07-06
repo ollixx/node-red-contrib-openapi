@@ -13,7 +13,7 @@ acceptance:
   - "package.json devDependencies enthält `node-red` (passende Major-Version zu node-red-node-test-helper)."
 verify: unit
 dependencies: []
-status: in_progress
+status: done
 ---
 
 # P1 — Test-Harness reparieren
@@ -21,7 +21,14 @@ status: in_progress
 Siehe `findings`. Zwei Dinge zusammen: (1) `node-red` als devDependency aufnehmen, damit
 `node-red-node-test-helper` initialisieren kann; (2) `test/integration_spec.js` defensiv
 machen, sodass ein fehlendes `node-red` die restliche Suite nie wieder mitreißt
-(resolvable-Check → `describe.skip`). Kontext: [context-budget → Pitfalls](../../../.ai/agents/context-budget.md), [validation](../../../.ai/agents/validation.md).
+(resolvable-Check → `describe.skip`). Kontext: [context-budget → Pitfalls](../../../../.ai/agents/context-budget.md), [validation](../../../../.ai/agents/validation.md).
 
 Kein Produkt-Verhalten ändert sich — nur die Testbarkeit. Danach ist die grüne Baseline
 wiederhergestellt, die jede weitere Phase (Regel „green baseline before start") voraussetzt.
+
+## Result
+
+**Delivered:** Test-Harness repariert — `node-red@^4` als devDependency; `test/integration_spec.js` überspringt die Integration sauber (`describe.skip`), wenn `node-red` nicht auflösbar ist, statt die ganze Mocha-Suite am fehlenden `require` abzubrechen. Zusätzlich entdeckt+behoben: `helper.request()` erreicht httpNode-Routen nicht → neuer geteilter `test/helpers/http-node.js` (supertest gegen die httpNode-App via `_registryUtil.createNodeApi().httpNode`), auf den die drei Integrationstests umgestellt wurden.
+**Stats:** 5 Dateien (package.json, test/integration_spec.js, test/helpers/http-node.js [neu], .ai/agents/node-testing.md, .ai/friction-log.md); 16 Tests grün (13 unit + 3 integration), vorher 0 lauffähig.
+**Notes:** Skip-Pfad vor der node-red-Installation mit exit=0 / 3 pending bewiesen; „installiert"-Pfad danach mit 3 grünen Integrationstests. node-testing.md sagte fälschlich `helper.request()` für httpNode — korrigiert. Keine Produktcode-Änderung an `lib/`/`nodes/`.
+**Cost:** session bba0ab6b, ~10m

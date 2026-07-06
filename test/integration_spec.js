@@ -2,6 +2,7 @@
 
 // End-to-end tests using node-red-node-test-helper. Requires `npm install`.
 const helper = require("node-red-node-test-helper");
+const { httpNodeRequest } = require("./helpers/http-node");
 const configNode = require("../nodes/openapi-config.js");
 const inNode = require("../nodes/openapi-in.js");
 const responseNode = require("../nodes/openapi-response.js");
@@ -10,9 +11,22 @@ const path = require("path");
 
 const SPEC = fs.readFileSync(path.join(__dirname, "..", "examples", "petstore.json"), "utf8");
 
-helper.init(require.resolve("node-red"));
+// Integration tests need a resolvable `node-red` for node-red-node-test-helper.
+// Mocha loads EVERY spec file before running any test, so a hard require of an
+// absent `node-red` here would abort the whole suite (not just this file) with
+// "Cannot find module 'node-red'". Guard it: when node-red is not installed,
+// skip this file's tests cleanly and let the rest of the suite run. (Roadmap P1)
+let nodeRedPath = null;
+try {
+  nodeRedPath = require.resolve("node-red");
+} catch {
+  // node-red not installed — integration tests will be skipped below.
+}
 
-describe("openapi-in integration", function () {
+const describeIntegration = nodeRedPath ? describe : describe.skip;
+if (nodeRedPath) helper.init(nodeRedPath);
+
+describeIntegration("openapi-in integration", function () {
   beforeEach(function (done) {
     helper.startServer(done);
   });
@@ -31,8 +45,7 @@ describe("openapi-in integration", function () {
     helper.load([configNode], baseFlow([]), function () {
       // Give the deferred spec load a tick.
       setTimeout(() => {
-        helper
-          .request()
+        httpNodeRequest()
           .get("/api/v1/openapi.json")
           .expect(200)
           .expect("Content-Type", /json/)
@@ -51,7 +64,7 @@ describe("openapi-in integration", function () {
     ]);
     helper.load([configNode, inNode], flow, function () {
       setTimeout(() => {
-        helper.request().get("/api/v1/pets/notanumber").expect(400).end(done);
+        httpNodeRequest().get("/api/v1/pets/notanumber").expect(400).end(done);
       }, 200);
     });
   });
@@ -80,7 +93,7 @@ describe("openapi-in integration", function () {
         return origSend(msgs);
       };
       setTimeout(() => {
-        helper.request().get("/api/v1/pets/7").expect(200).end((err, res) => {
+        httpNodeRequest().get("/api/v1/pets/7").expect(200).end((err, res) => {
           if (err) return done(err);
           if (res.body.name !== "Rex") return done(new Error("unexpected body"));
           done();
