@@ -69,11 +69,13 @@ module.exports = function (RED) {
         node.ready = true;
         // (Re)register meta endpoints.
         unregisterMeta(RED, node._metaRoutes);
-        node._metaRoutes = registerMeta(RED, {
+        const metaResult = registerMeta(RED, {
           raw: spec.raw,
           prefix: spec.prefix,
           enable: node.meta,
-        }).routes;
+        });
+        node._metaRoutes = metaResult.routes;
+        for (const w of metaResult.warnings || []) node.warn(w);
         node.emit("spec-ready", spec);
         node.log(
           `OpenAPI loaded: ${spec.index.operations.length} operations, prefix "${spec.prefix || "/"}"`
