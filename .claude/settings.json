@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm test *)",
+      "Bash(npm run check:roadmap)",
+      "Bash(npm run check:links)",
+      "Bash(npm run validate)",
+      "Bash(npx mocha *)",
+      "Bash(grep -n *)",
+      "Bash(grep -rn *)",
+      "Bash(grep -l *)",
+      "Bash(grep -r *)",
+      "Bash(find . *)"
+    ],
+    "deny": []
+  },
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.ai/hooks/record-run-cost.js\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.ai/hooks/record-run-cost.js\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -4,3 +4,7 @@ npm-debug.log*
 coverage/
 .DS_Store
 *.log
+
+# Published node-red contrib library: the dev-only lockfile is intentionally not
+# committed (it does not affect consumers). Dev deps reproduce from package.json.
+package-lock.json
