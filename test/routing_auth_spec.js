@@ -57,4 +57,25 @@ describe("auth", function () {
     const r = authenticate([{ ApiKeyAuth: [] }, { BasicAuth: [] }], schemes, mkReq({ Authorization: "Basic " + ok }), { mode: "enforce", apiKeys: ["x"], basicUsers: { alice: "pw" } });
     assert.strictEqual(r.auth.scheme, "BasicAuth");
   });
+  it("reports every scheme of an AND requirement (does not drop all but the last)", function () {
+    const ok = Buffer.from("alice:pw").toString("base64");
+    const r = authenticate(
+      [{ ApiKeyAuth: [], BasicAuth: [] }],
+      schemes,
+      mkReq({ "X-API-Key": "s1", Authorization: "Basic " + ok }),
+      { mode: "enforce", apiKeys: ["s1"], basicUsers: { alice: "pw" } }
+    );
+    assert.strictEqual(r.ok, true);
+    assert.strictEqual(r.auth.scheme, "ApiKeyAuth"); // first scheme = deterministic primary
+    assert.deepStrictEqual(r.auth.schemes.map((s) => s.scheme), ["ApiKeyAuth", "BasicAuth"]);
+  });
+  it("an AND requirement fails if any of its schemes is unsatisfied", function () {
+    const r = authenticate(
+      [{ ApiKeyAuth: [], BasicAuth: [] }],
+      schemes,
+      mkReq({ "X-API-Key": "s1" }), // basic credential absent
+      { mode: "enforce", apiKeys: ["s1"], basicUsers: { alice: "pw" } }
+    );
+    assert.strictEqual(r.ok, false);
+  });
 });
