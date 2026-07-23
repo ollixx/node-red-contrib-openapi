@@ -15,7 +15,7 @@ verify: http
 spec: docs/nodes/openapi-config.md
 tests: test/openapi-config.tests.md
 dependencies: [P1]
-status: pending
+status: in_progress
 ---
 
 # P2 — Auth in den Config-Node zusammenführen
