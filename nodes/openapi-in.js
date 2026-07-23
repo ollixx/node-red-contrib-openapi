@@ -8,35 +8,57 @@ const {
   removeRoute,
 } = require("../lib/routing");
 
+const DEFAULT_MAX_BODY_BYTES = 1024 * 1024; // 1 MB
+
 /**
- * Minimal body parser: buffers the request stream and parses JSON, urlencoded
- * or text based on Content-Type. Skips if the body was already parsed upstream.
+ * Body parser factory: buffers the request stream (up to `maxBytes`) and parses
+ * JSON, urlencoded or text based on Content-Type. Skips if the body was already
+ * parsed upstream. A request whose body exceeds `maxBytes` is rejected with 413
+ * before the handler runs (REQUIREMENTS §4 — configurable body-size limit).
+ * @param {number} maxBytes 0/falsy disables the limit
  */
-function bodyParser(req, res, next) {
-  if (req.body !== undefined) return next();
-  const chunks = [];
-  req.on("data", (c) => chunks.push(c));
-  req.on("end", () => {
-    const buf = Buffer.concat(chunks);
-    req.rawBody = buf;
-    const ct = (req.headers["content-type"] || "").split(";")[0].trim().toLowerCase();
-    if (!buf.length) {
-      req.body = undefined;
-    } else if (ct === "application/json" || ct.endsWith("+json")) {
-      try {
-        req.body = JSON.parse(buf.toString("utf8"));
-      } catch (e) {
-        req._bodyParseError = e;
+function makeBodyParser(maxBytes) {
+  return function bodyParser(req, res, next) {
+    if (req.body !== undefined) return next();
+    const chunks = [];
+    let size = 0;
+    let aborted = false;
+    req.on("data", (c) => {
+      if (aborted) return;
+      size += c.length;
+      if (maxBytes && size > maxBytes) {
+        aborted = true;
+        res.status(413).json({ error: "payload too large", limit: maxBytes });
+        req.destroy();
+        return;
+      }
+      chunks.push(c);
+    });
+    req.on("end", () => {
+      if (aborted) return;
+      const buf = Buffer.concat(chunks);
+      req.rawBody = buf;
+      const ct = (req.headers["content-type"] || "").split(";")[0].trim().toLowerCase();
+      if (!buf.length) {
+        req.body = undefined;
+      } else if (ct === "application/json" || ct.endsWith("+json")) {
+        try {
+          req.body = JSON.parse(buf.toString("utf8"));
+        } catch (e) {
+          req._bodyParseError = e;
+          req.body = buf.toString("utf8");
+        }
+      } else if (ct === "application/x-www-form-urlencoded") {
+        req.body = Object.fromEntries(new URLSearchParams(buf.toString("utf8")));
+      } else {
         req.body = buf.toString("utf8");
       }
-    } else if (ct === "application/x-www-form-urlencoded") {
-      req.body = Object.fromEntries(new URLSearchParams(buf.toString("utf8")));
-    } else {
-      req.body = buf.toString("utf8");
-    }
-    next();
-  });
-  req.on("error", next);
+      next();
+    });
+    req.on("error", (err) => {
+      if (!aborted) next(err);
+    });
+  };
 }
 
 module.exports = function (RED) {
@@ -48,6 +70,10 @@ module.exports = function (RED) {
     node.operationId = config.operation;
     node.onError = config.onError || "respond"; // "respond" | "output"
     node.configNode = RED.nodes.getNode(config.server);
+
+    // Configurable request body-size limit (bytes). Default 1 MB.
+    const parsedMax = parseInt(config.maxBodyBytes, 10);
+    node.maxBodyBytes = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : DEFAULT_MAX_BODY_BYTES;
 
     node._route = null; // { method, path }
     node._validator = null;
@@ -75,7 +101,7 @@ module.exports = function (RED) {
       const prefix = cfgNode.getPrefix();
       const exprPath = joinPath(prefix, toExpressPath(op.path));
       try {
-        registerRoute(RED, op.method, exprPath, [bodyParser, handler]);
+        registerRoute(RED, op.method, exprPath, [makeBodyParser(node.maxBodyBytes), handler]);
         node._route = { method: op.method, path: exprPath };
         status("green", `${op.method.toUpperCase()} ${exprPath}`);
       } catch (err) {

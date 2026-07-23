@@ -6,7 +6,8 @@
       name: { value: "" },
       server: { value: "", type: "openapi-config", required: true },
       operation: { value: "", required: true },
-      onError: { value: "respond" }
+      onError: { value: "respond" },
+      maxBodyBytes: { value: 1048576, validate: RED.validators.number() }
     },
     inputs: 0,
     outputs: 2,
@@ -67,6 +68,10 @@
       <option value="respond">Respond 400/401 automatically</option>
       <option value="output">Send to error output</option>
     </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-maxBodyBytes"><i class="fa fa-hdd-o"></i> Max body</label>
+    <input type="text" id="node-input-maxBodyBytes" placeholder="1048576" style="width:120px"> bytes
   </div>
 </script>
 
