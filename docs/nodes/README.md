@@ -16,7 +16,7 @@ applies, the message it emits (or consumes), and the responses/errors it produce
 
 | Node | Doc | Test catalogue |
 |---|---|---|
-| `openapi-config` | `openapi-config.md` _(created by P2)_ | `test/openapi-config.tests.md` |
+| `openapi-config` | [openapi-config.md](openapi-config.md) | `test/openapi-config.tests.md` |
 | `openapi-in` | `openapi-in.md` _(tbd)_ | `test/openapi-in.tests.md` |
 | `openapi-response` | `openapi-response.md` _(tbd)_ | `test/openapi-response.tests.md` |
 

@@ -29,13 +29,14 @@ Hält die OpenAPI-Spezifikation und stellt sie allen anderen Nodes zentral berei
 - Spec beim Deploy validieren (OpenAPI 3.0/3.1, optional Swagger 2.0). Fehler klar an den Node-Status/Editor melden.
 - Operationen indexieren: `operationId` → `{ method, path, parameters, requestBody, responses, security }`.
 - Base-Path / Server-URL berücksichtigen (Prefix für alle Routen).
-- Referenz auf einen optionalen `openapi-auth`-Node.
+- Authentifizierung direkt konfigurieren (siehe 3.2) — kein eigener Auth-Node.
 - Meta-Endpunkte registrieren (siehe 3.5), einzeln abschaltbar.
 
 **Editor-UX:** Statusanzeige (valide / X Operationen / Fehler), Buttons zum Neu-Laden und zur Vorschau der Operationsliste.
 
-### 3.2 `openapi-auth` (Config-Node)
-Bündelt die Authentifizierung, abgeleitet aus `components.securitySchemes` der Spec.
+### 3.2 Authentifizierung (im `openapi-config`)
+Die Authentifizierung ist **Teil des `openapi-config`-Nodes**, kein eigener Knoten
+(ADR 0001). Sie wird aus `components.securitySchemes` der Spec abgeleitet.
 
 **Unterstützte Schemes:**
 - `apiKey` (Header / Query / Cookie)
@@ -58,7 +59,7 @@ Realisiert **eine** Operation der Spec (ein Endpunkt = ein Node).
 - Route im Node-RED-HTTP-Server registrieren (Pfad-Umschreibung `{param}` → Express `:param`), inkl. Server-Prefix.
 - Request gegen die Spec validieren: Pfad-, Query-, Header-, Cookie-Parameter (Typen, `required`, Enums, Formate) und `requestBody` gegen das JSON-Schema (via AJV).
 - Content-Type-Aushandlung entsprechend `requestBody.content`.
-- Auth über den `openapi-auth`-Node auslösen; Ergebnis in `msg.auth`.
+- Auth über den `openapi-config`-Node auslösen; Ergebnis in `msg.auth`.
 - Bei Validierungsfehler: konfigurierbar — automatische 400-Antwort **oder** Weiterreichen an einen Fehlerausgang für eigene Behandlung.
 - Ausgabe einer **sauberen, normalisierten Message**:
   - `msg.payload` = validierter Body (bei bodylosen Methoden die Parameter)
@@ -111,8 +112,7 @@ Standardmäßig aktiv, je einzeln abschaltbar:
   ```
   package.json          (node-red-Sektion mit allen Nodes)
   nodes/
-    openapi-config.js / .html
-    openapi-auth.js   / .html
+    openapi-config.js / .html   (incl. Authentifizierung)
     openapi-in.js     / .html
     openapi-response.js / .html
   lib/

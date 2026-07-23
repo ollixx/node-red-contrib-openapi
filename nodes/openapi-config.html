@@ -9,10 +9,14 @@
       url: { value: "" },
       contextKey: { value: "" },
       contextStore: { value: "" },
-      auth: { value: "", type: "openapi-auth", required: false },
+      authMode: { value: "enforce" },
       metaJson: { value: true },
       metaYaml: { value: true },
       metaDocs: { value: true }
+    },
+    credentials: {
+      apiKeys: { type: "text" },
+      basicUsers: { type: "text" }
     },
     label: function () {
       return this.name || "openapi spec";
@@ -67,8 +71,21 @@
 
   <hr>
   <div class="form-row">
-    <label for="node-config-input-auth"><i class="fa fa-lock"></i> Auth</label>
-    <input type="text" id="node-config-input-auth">
+    <label for="node-config-input-authMode"><i class="fa fa-shield"></i> Auth mode</label>
+    <select id="node-config-input-authMode">
+      <option value="enforce">Enforce (validate credentials)</option>
+      <option value="extract">Extract only (flow decides)</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label style="vertical-align:top" for="node-config-input-apiKeys"><i class="fa fa-key"></i> API keys</label>
+    <textarea id="node-config-input-apiKeys" rows="3" style="width:70%;font-family:monospace"
+      placeholder="one key per line (or comma-separated)"></textarea>
+  </div>
+  <div class="form-row">
+    <label style="vertical-align:top" for="node-config-input-basicUsers"><i class="fa fa-user"></i> Basic users</label>
+    <textarea id="node-config-input-basicUsers" rows="3" style="width:70%;font-family:monospace"
+      placeholder="user:password per line"></textarea>
   </div>
   <div class="form-row">
     <label><i class="fa fa-globe"></i> Meta endpoints</label>
@@ -83,4 +100,10 @@
   Supports inline, file, URL and context sources, dereferences <code>$ref</code>s, validates the
   document, and (optionally) serves <code>openapi.json</code>, <code>openapi.yaml</code> and a Swagger-UI
   docs page.</p>
+  <h3>Authentication</h3>
+  <p>Auth is configured here (there is no separate auth node). In <b>enforce</b> mode credentials are
+  checked against the configured API keys / basic users; in <b>extract</b> mode the token is pulled
+  from the request and passed to the flow in <code>msg.auth</code> for custom handling. The schemes
+  themselves come from the spec's <code>securitySchemes</code>; secrets are stored as Node-RED
+  credentials and never appear in the flow export.</p>
 </script>

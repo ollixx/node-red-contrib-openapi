@@ -8,13 +8,7 @@
     "metaJson": true,
     "metaYaml": true,
     "metaDocs": true,
-    "auth": "auth1"
-  },
-  {
-    "id": "auth1",
-    "type": "openapi-auth",
-    "name": "Petstore auth",
-    "mode": "enforce"
+    "authMode": "enforce"
   },
   {
     "id": "getpet_in",

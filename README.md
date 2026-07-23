@@ -12,8 +12,7 @@ See [REQUIREMENTS.md](./REQUIREMENTS.md) for the full concept and roadmap.
 
 | Node | Type | Purpose |
 |------|------|---------|
-| `openapi-config` | config | Loads the spec (inline / file / URL / context), dereferences & validates it, indexes operations, serves the meta endpoints. |
-| `openapi-auth` | config | Authentication derived from the spec's `securitySchemes`. Enforce or extract-only; secrets stored as credentials. |
+| `openapi-config` | config | Loads the spec (inline / file / URL / context), dereferences & validates it, indexes operations, serves the meta endpoints, and holds the authentication config (derived from the spec's `securitySchemes`; enforce or extract-only; secrets stored as credentials). |
 | `openapi-in` | input | Implements one operation: registers the route, authenticates, validates the request, emits a normalized `msg`. |
 | `openapi-response` | output | Sends the reply, validates the body against the spec, maps `msg.error` to a spec-shaped error (RFC 7807 by default). |
 

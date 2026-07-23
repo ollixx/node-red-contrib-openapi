@@ -2,6 +2,7 @@
 
 const { loadSpec } = require("../lib/spec-loader");
 const { registerMeta, unregisterMeta } = require("../lib/meta");
+const { authenticate } = require("../lib/auth");
 
 module.exports = function (RED) {
   function OpenApiConfigNode(config) {
@@ -15,8 +16,17 @@ module.exports = function (RED) {
     node.url = config.url || "";
     node.contextKey = config.contextKey || "";
     node.contextStore = config.contextStore || "";
-    node.authNode = config.auth ? RED.nodes.getNode(config.auth) : null;
-    node.authConfigId = config.auth || null;
+
+    // Authentication is configured here, not in a separate node (ADR 0001).
+    // "enforce": validate credentials against the config below; "extract": only
+    // pull the token out and let the flow decide. Secrets live in credentials.
+    node.authMode = config.authMode || "enforce";
+    const creds = node.credentials || {};
+    node.authCfg = {
+      mode: node.authMode,
+      apiKeys: parseList(creds.apiKeys),
+      basicUsers: parseUserMap(creds.basicUsers),
+    };
 
     node.meta = {
       json: config.metaJson !== false,
@@ -93,10 +103,10 @@ module.exports = function (RED) {
         ? node.spec.api.components.securitySchemes || {}
         : {};
     };
-    node.getAuthNode = function () {
-      if (node.authNode) return node.authNode;
-      if (node.authConfigId) node.authNode = RED.nodes.getNode(node.authConfigId);
-      return node.authNode;
+    // Run authentication for a request against this spec's securitySchemes and
+    // the operation's security requirement, using the auth config above.
+    node.authenticate = function (security, schemes, req) {
+      return authenticate(security, schemes, req, node.authCfg);
     };
 
     node.on("close", function (done) {
@@ -109,7 +119,33 @@ module.exports = function (RED) {
     setTimeout(() => node.load(), 0);
   }
 
-  RED.nodes.registerType("openapi-config", OpenApiConfigNode);
+  function parseList(raw) {
+    if (!raw) return [];
+    return String(raw)
+      .split(/[\n,]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  function parseUserMap(raw) {
+    const map = {};
+    if (!raw) return map;
+    for (const line of String(raw).split(/\n/)) {
+      const t = line.trim();
+      if (!t) continue;
+      const idx = t.indexOf(":");
+      if (idx < 0) continue;
+      map[t.slice(0, idx)] = t.slice(idx + 1);
+    }
+    return map;
+  }
+
+  RED.nodes.registerType("openapi-config", OpenApiConfigNode, {
+    credentials: {
+      apiKeys: { type: "text" },
+      basicUsers: { type: "text" },
+    },
+  });
 
   // ---- Admin endpoint: operation list for the editor dropdown ----
   RED.httpAdmin.get(

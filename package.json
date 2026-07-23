@@ -17,7 +17,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "mocha test/**/*_spec.js --timeout 10000",
+    "test": "mocha test/**/*_spec.js --timeout 10000 --exit",
     "check:roadmap": "node scripts/check-roadmap.js",
     "check:links": "node scripts/check-doc-links.js",
     "validate": "npm run check:roadmap && npm run check:links && npm test"
@@ -26,7 +26,6 @@
     "version": ">=3.0.0",
     "nodes": {
       "openapi-config": "nodes/openapi-config.js",
-      "openapi-auth": "nodes/openapi-auth.js",
       "openapi-in": "nodes/openapi-in.js",
       "openapi-response": "nodes/openapi-response.js"
     }

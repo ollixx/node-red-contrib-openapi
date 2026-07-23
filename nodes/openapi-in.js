@@ -97,9 +97,8 @@ module.exports = function (RED) {
 
       // ---- Authentication ----
       let authResult = { ok: true, auth: { scheme: null, token: null, claims: null, scopes: [], principal: null } };
-      const authNode = cfgNode.getAuthNode && cfgNode.getAuthNode();
-      if (authNode && typeof authNode.authenticate === "function") {
-        authResult = authNode.authenticate(op.security, cfgNode.getSecuritySchemes(), req);
+      if (cfgNode && typeof cfgNode.authenticate === "function") {
+        authResult = cfgNode.authenticate(op.security, cfgNode.getSecuritySchemes(), req);
       }
       if (!authResult.ok) {
         return fail(req, res, authResult.status || 401, "auth", [

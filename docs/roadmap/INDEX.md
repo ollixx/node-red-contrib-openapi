@@ -22,7 +22,8 @@ blocker clears.
 
 ## Open work (pending / in_progress)
 
-- **P2** — foundation — Auth in den Config-Node zusammenführen (ADR 0001): `openapi-auth` entfällt als eigener Knoten; `mode` + Credentials + `authenticate()` wandern auf `openapi-config` — [P2](foundation/P2-merge-auth-into-config.md)
+_(none — the foundation epic is drained. Author the next packages with
+`/evolve-roadmap`, or pick from the epic scopes below.)_
 
 ## Epics (where plans live)
 
@@ -55,7 +56,7 @@ folder for the full history.
 
 | Epic | done |
 |---|---|
-| foundation | 1 |
+| foundation | 2 |
 | nodes/openapi-config | 0 |
 | nodes/openapi-in | 0 |
 | nodes/openapi-response | 0 |
@@ -65,4 +66,4 @@ folder for the full history.
 | aspects/meta-docs | 0 |
 | aspects/lifecycle | 0 |
 
-**Total: 1 done, 1 open, 0 deferred.**
+**Total: 2 done, 0 open, 0 deferred.**
