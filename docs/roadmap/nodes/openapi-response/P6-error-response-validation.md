@@ -14,7 +14,7 @@ verify: unit
 spec: docs/nodes/openapi-response.md
 tests: test/openapi-response.tests.md
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P6 — Error-Response-Validierung
