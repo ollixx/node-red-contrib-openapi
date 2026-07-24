@@ -18,7 +18,7 @@ endpoints, and **holds the authentication config** (ADR 0001 — there is no sep
 | `authMode` | enum `enforce`\|`extract` | `enforce` | `enforce`: validate credentials against the fields below and reject (401/403) on failure. `extract`: only pull the token out and pass it to the flow in `msg.auth`; the flow decides. |
 | `metaJson` | bool | `true` | Serve `GET {prefix}/openapi.json`. |
 | `metaYaml` | bool | `true` | Serve `GET {prefix}/openapi.yaml`. |
-| `metaDocs` | bool | `true` | Serve `GET {prefix}/docs` (Swagger-UI). |
+| `metaDocs` | bool | `true` | Serve `GET {prefix}/docs` (Swagger-UI, self-hosted from `swagger-ui-dist` — no CDN; assets under `{prefix}/docs/`). |
 
 ### Credentials (stored via Node-RED `credentials`, never in the flow export)
 

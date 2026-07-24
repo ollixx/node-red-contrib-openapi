@@ -26,7 +26,7 @@ d("meta endpoints", function () {
     const app = express();
     const RED = { httpNode: app };
     const { routes } = registerMeta(RED, { raw: RAW, prefix: "/api/v1", enable: { json: true, yaml: true, docs: true } });
-    assert.strictEqual(routes.length, 3);
+    assert.strictEqual(routes.length, 5); // json + yaml + docs page + 2 self-hosted assets
 
     const j = await request(app).get("/api/v1/openapi.json");
     assert.strictEqual(j.status, 200);
@@ -72,5 +72,48 @@ d("meta endpoints", function () {
     assert.strictEqual(second.routes.length, 0, "no duplicate registration on collision");
     assert.ok(second.warnings.length >= 1, "collision must warn");
     assert.match(second.warnings[0], /already registered/);
+  });
+});
+
+d("meta docs — self-hosted Swagger-UI (P5)", function () {
+  it("serves the docs HTML referencing LOCAL assets, not a CDN", async function () {
+    const app = express();
+    const RED = { httpNode: app };
+    registerMeta(RED, { raw: RAW, prefix: "/api/v1", enable: { json: true, yaml: false, docs: true } });
+    const docs = await request(app).get("/api/v1/docs");
+    assert.strictEqual(docs.status, 200);
+    assert.doesNotMatch(docs.text, /jsdelivr|cdn\./i, "docs HTML must not reference a CDN");
+    assert.match(docs.text, /\/api\/v1\/docs\/swagger-ui\.css/);
+    assert.match(docs.text, /\/api\/v1\/docs\/swagger-ui-bundle\.js/);
+  });
+
+  it("serves the swagger-ui assets locally with the right content types", async function () {
+    const app = express();
+    const RED = { httpNode: app };
+    registerMeta(RED, { raw: RAW, prefix: "/api/v1", enable: { json: false, yaml: false, docs: true } });
+    const css = await request(app).get("/api/v1/docs/swagger-ui.css");
+    assert.strictEqual(css.status, 200);
+    assert.match(css.headers["content-type"], /css/);
+    const js = await request(app).get("/api/v1/docs/swagger-ui-bundle.js");
+    assert.strictEqual(js.status, 200);
+    assert.match(js.headers["content-type"], /javascript/);
+  });
+
+  it("disabling docs 404s both the page and the assets", async function () {
+    const app = express();
+    const RED = { httpNode: app };
+    registerMeta(RED, { raw: RAW, prefix: "/api/v1", enable: { json: true, yaml: false, docs: false } });
+    assert.strictEqual((await request(app).get("/api/v1/docs")).status, 404);
+    assert.strictEqual((await request(app).get("/api/v1/docs/swagger-ui.css")).status, 404);
+  });
+
+  it("unregisterMeta removes the docs page and its asset routes (no orphan)", async function () {
+    const app = express();
+    const RED = { httpNode: app };
+    const { routes } = registerMeta(RED, { raw: RAW, prefix: "", enable: { json: false, yaml: false, docs: true } });
+    assert.strictEqual((await request(app).get("/docs/swagger-ui.css")).status, 200);
+    unregisterMeta(RED, routes);
+    assert.strictEqual((await request(app).get("/docs")).status, 404);
+    assert.strictEqual((await request(app).get("/docs/swagger-ui.css")).status, 404);
   });
 });
