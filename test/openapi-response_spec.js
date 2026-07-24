@@ -159,4 +159,32 @@ describeIntegration("openapi-response", function () {
       assert.strictEqual(res.rec.headers["X-Custom"], "abc");
     }, done);
   });
+
+  // P6 — error responses are validated too. getPet's 404 defines an Error schema
+  // (requires code+message); the default RFC-7807 body does not match it.
+  it("validation=strict replaces a spec-violating error body with 500", function (done) {
+    withNode("strict", "problem", (node) => {
+      const res = fakeRes();
+      node.receive(msgFor(res, { payload: undefined, error: { statusCode: 404, detail: "no pet" } }));
+      assert.strictEqual(res.rec.statusCode, 500, "non-conforming 404 error body under strict → 500");
+    }, done);
+  });
+
+  it("validation=warn still sends a spec-violating error body", function (done) {
+    withNode("warn", "problem", (node) => {
+      const res = fakeRes();
+      node.receive(msgFor(res, { payload: undefined, error: { statusCode: 404, detail: "no pet" } }));
+      assert.strictEqual(res.rec.statusCode, 404, "warn sends the error even if it violates the spec");
+    }, done);
+  });
+
+  it("error body is sent unchanged when the spec has no schema for that status (even strict)", function (done) {
+    withNode("strict", "problem", (node) => {
+      const res = fakeRes();
+      // getPet defines 200 + 404 only; 409 has no schema → matched=false → sent.
+      node.receive(msgFor(res, { payload: undefined, error: { statusCode: 409, detail: "conflict" } }));
+      assert.strictEqual(res.rec.statusCode, 409, "no spec schema → no false 500");
+      assert.strictEqual(res.rec.body.status, 409);
+    }, done);
+  });
 });

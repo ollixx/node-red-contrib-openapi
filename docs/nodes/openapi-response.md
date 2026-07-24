@@ -21,8 +21,9 @@ guarantees exactly one send.
   - `msg.error` set → error response: status from `msg.error.statusCode` / `msg.statusCode`
     / `msg.error.status` / `500`; body built per `errorFormat`.
   - otherwise → status from `msg.statusCode` / `defaultStatus`; body = `msg.payload`.
-- **Response validation** (only on the success path, only when `msg.openapi.operationId`
-  resolves a schema for the status; `NXX`/`default` fallback applies):
+- **Response validation** (success **and** error bodies, when `msg.openapi.operationId`
+  resolves a schema for the status; `NXX`/`default` fallback applies; a status with no
+  schema is `matched=false` and sent unchanged):
   - `strict` — an invalid body is **not** sent; replaced with `500`.
   - `warn` — the body is sent, the mismatch is logged and the node status flags it.
   - `off` — no validation; the body is sent as-is.

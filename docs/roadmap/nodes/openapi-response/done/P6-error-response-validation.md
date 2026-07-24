@@ -14,14 +14,21 @@ verify: unit
 spec: docs/nodes/openapi-response.md
 tests: test/openapi-response.tests.md
 dependencies: []
-status: in_progress
+status: done
 ---
 
 # P6 — Error-Response-Validierung
 
-Motiviert durch [ADR 0002](../../../adr/0002-post-mvp-feature-roadmap.md) (Review-Fund P3.1).
+Motiviert durch [ADR 0002](../../../../adr/0002-post-mvp-feature-roadmap.md) (Review-Fund P3.1).
 
 Der `OperationValidator.validateResponse` existiert bereits und wird im Erfolgs-Pfad
 genutzt; hier wird er auch auf den `msg.error`-Pfad angewandt, unter demselben
 `validation`-Modus. `spec` (docs/nodes/openapi-response.md) und `tests`-Katalog werden in
 P4 bzw. hier mitgeführt.
+
+## Result
+
+**Delivered:** openapi-response validiert jetzt auch den msg.error-Body gegen das Spec-Response-Schema des Statuscodes (gleicher NXX/default-Fallback + Modus): strict → spec-verletzender Fehler-Body wird 500, warn → gesendet+geloggt, off → ungeprüft; ohne Schema (matched=false) unverändert gesendet.
+**Stats:** 3 Dateien (nodes/openapi-response.js [1-Zeilen-Guard entfernt], test/openapi-response_spec.js [+3], test/openapi-response.tests.md, docs/nodes/openapi-response.md); 79 Tests grün (vorher 76).
+**Notes:** Der RFC-7807/plain-Aufbau von msg.error bleibt unverändert; nur die Validierung kommt hinzu. Fake-res-Nachweis (verify: unit). Doc-Cross-Check aktualisiert.
+**Cost:** session bba0ab6b, ~2m

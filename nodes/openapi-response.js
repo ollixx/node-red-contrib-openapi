@@ -73,9 +73,11 @@ module.exports = function (RED) {
         body = msg.payload;
       }
 
-      // Validate against the spec response schema.
+      // Validate against the spec response schema — success AND error bodies
+      // (P6). The error body (RFC 7807 / plain) is checked against the spec's
+      // response schema for its status, under the same validation mode.
       const operationId = msg.openapi && msg.openapi.operationId;
-      if (!isError && node.validation !== "off" && operationId) {
+      if (node.validation !== "off" && operationId) {
         const validator = validatorFor(operationId);
         if (validator) {
           const contentType =

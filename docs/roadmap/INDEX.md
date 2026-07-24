@@ -24,7 +24,6 @@ blocker clears.
 
 Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
 
-- **P6** — nodes/openapi-response — Error-Responses (`msg.error`) gegen das Spec-Error-Schema validieren — [P6](nodes/openapi-response/P6-error-response-validation.md)
 - **P7** — aspects/auth — HTTP-Bearer: echte JWT-Verifikation (Shared Secret + JWKS) — [P7](aspects/auth/P7-bearer-jwt-verification.md)
 - **P8** — aspects/auth — Per-Operation Scope-Enforcement (403), hängt an P7 — [P8](aspects/auth/P8-scope-enforcement.md)
 
@@ -70,7 +69,7 @@ folder for the full history.
 | foundation | 3 |
 | nodes/openapi-config | 0 |
 | nodes/openapi-in | 0 |
-| nodes/openapi-response | 0 |
+| nodes/openapi-response | 1 |
 | aspects/spec-handling | 0 |
 | aspects/validation | 0 |
 | aspects/auth | 0 |
@@ -80,4 +79,4 @@ folder for the full history.
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
 
-**Total: 5 done, 3 open, 6 deferred.**
+**Total: 6 done, 2 open, 6 deferred.**
