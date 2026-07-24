@@ -25,6 +25,9 @@ before they go out.
 - **Auth in the config node** (no separate node): apiKey (header/query/cookie),
   http basic, and **bearer JWT verification** (HS256 secret / RS256·ES256 PEM) with
   **per-operation scope enforcement** (403 on insufficient scope).
+- **Secrets are write-only credentials** — API keys, basic users and the JWT secret are
+  stored as `password`-type Node-RED credentials: encrypted in `flows_cred.json`, never
+  in `flows.json`, and not echoed back to the editor after saving.
 - **Self-hosted Swagger-UI** at `{prefix}/docs` — no CDN dependency.
 - Meta endpoints `openapi.json` / `openapi.yaml` / `docs`, individually toggleable and
   guarded against prefix collisions.

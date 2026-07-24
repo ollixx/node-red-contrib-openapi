@@ -20,14 +20,19 @@ endpoints, and **holds the authentication config** (ADR 0001 — there is no sep
 | `metaYaml` | bool | `true` | Serve `GET {prefix}/openapi.yaml`. |
 | `metaDocs` | bool | `true` | Serve `GET {prefix}/docs` (Swagger-UI, self-hosted from `swagger-ui-dist` — no CDN; assets under `{prefix}/docs/`). |
 
-### Credentials (stored via Node-RED `credentials`, never in the flow export)
+### Credentials
+
+Stored as Node-RED **credentials** — written encrypted to `flows_cred.json` (with the
+instance's `credentialSecret`), **never to `flows.json`**. The secret-bearing ones are
+`password`-type: **write-only** in the editor (not shown/echoed after saving; re-enter to
+change). `jwtPublicKey` is not a secret and stays a plain (editable) credential.
 
 | Credential | Type | Meaning |
 |---|---|---|
-| `apiKeys` | text | Allow-list of accepted API-key values, one per line or comma-separated. In `enforce` mode an `apiKey` scheme passes only if the presented key is in this list; an empty list means "presence is enough". |
-| `basicUsers` | text | `user:password` per line. In `enforce` mode an `http basic` scheme passes only if the presented pair matches. |
-| `jwtSecret` | text | HS256 shared secret for verifying bearer JWTs. When set (and `enforce`), a bearer token is verified (signature + expiry). |
-| `jwtPublicKey` | text (PEM) | RS256/ES256 public key for verifying bearer JWTs; **takes precedence** over `jwtSecret`. Remote JWKS-URL verification is roadmap (P9). |
+| `apiKeys` | password | Allow-list of accepted API-key values, one per line or comma-separated. In `enforce` mode an `apiKey` scheme passes only if the presented key is in this list; an empty list means "presence is enough". |
+| `basicUsers` | password | `user:password` per line. In `enforce` mode an `http basic` scheme passes only if the presented pair matches. |
+| `jwtSecret` | password | HS256 shared secret for verifying bearer JWTs. When set (and `enforce`), a bearer token is verified (signature + expiry). |
+| `jwtPublicKey` | text (PEM) | RS256/ES256 public key for verifying bearer JWTs; **takes precedence** over `jwtSecret`. Not a secret. Remote JWKS-URL verification is roadmap (P9). |
 
 ## Behaviour
 

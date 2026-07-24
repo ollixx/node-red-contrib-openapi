@@ -15,9 +15,9 @@
       metaDocs: { value: true }
     },
     credentials: {
-      apiKeys: { type: "text" },
-      basicUsers: { type: "text" },
-      jwtSecret: { type: "text" },
+      apiKeys: { type: "password" },
+      basicUsers: { type: "password" },
+      jwtSecret: { type: "password" },
       jwtPublicKey: { type: "text" }
     },
     label: function () {
@@ -91,7 +91,7 @@
   </div>
   <div class="form-row">
     <label for="node-config-input-jwtSecret"><i class="fa fa-lock"></i> JWT secret</label>
-    <input type="text" id="node-config-input-jwtSecret" placeholder="HS256 shared secret (bearer)">
+    <input type="password" id="node-config-input-jwtSecret" placeholder="HS256 shared secret (bearer)">
   </div>
   <div class="form-row">
     <label style="vertical-align:top" for="node-config-input-jwtPublicKey"><i class="fa fa-certificate"></i> JWT public key</label>
@@ -115,6 +115,9 @@
   <p>Auth is configured here (there is no separate auth node). In <b>enforce</b> mode credentials are
   checked against the configured API keys / basic users; in <b>extract</b> mode the token is pulled
   from the request and passed to the flow in <code>msg.auth</code> for custom handling. The schemes
-  themselves come from the spec's <code>securitySchemes</code>; secrets are stored as Node-RED
-  credentials and never appear in the flow export.</p>
+  themselves come from the spec's <code>securitySchemes</code>.</p>
+  <p><b>Secrets</b> (API keys, basic users, JWT secret) are stored as Node-RED
+  <b>credentials</b> — written encrypted to <code>flows_cred.json</code>, never to
+  <code>flows.json</code>. They are <i>write-only</i> in the editor: once saved they are not
+  shown again (re-enter to change). The JWT public key is not a secret and stays editable.</p>
 </script>

@@ -174,9 +174,9 @@ module.exports = function (RED) {
 
   RED.nodes.registerType("openapi-config", OpenApiConfigNode, {
     credentials: {
-      apiKeys: { type: "text" },
-      basicUsers: { type: "text" },
-      jwtSecret: { type: "text" },
+      apiKeys: { type: "password" },
+      basicUsers: { type: "password" },
+      jwtSecret: { type: "password" },
       jwtPublicKey: { type: "text" },
     },
   });
