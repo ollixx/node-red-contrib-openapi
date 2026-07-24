@@ -66,9 +66,11 @@ integration specs require the installed dependencies and Node-RED.
 
 ## Status
 
-MVP. Planned next: in-editor Monaco spec editor with completion/validation, full
-OAuth2/JWT verification, spec-based mocking, and per-operation metrics
-(see REQUIREMENTS.md §7).
+**0.9.0 — feature-complete beta.** All core features are in and tested (see
+[CHANGELOG.md](CHANGELOG.md)); the public API is stabilising toward 1.0. Deferred for
+later: OAuth2/OIDC full flows + JWKS, spec-based mocking, per-operation metrics,
+Swagger 2.0 input, an in-editor Monaco spec editor, and per-`securityScheme` editor
+rendering (see REQUIREMENTS.md §7).
 
 ## License
 
