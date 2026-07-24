@@ -14,7 +14,7 @@ verify: http
 spec: docs/nodes/openapi-config.md
 tests: test/meta.tests.md
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P5 — Self-hosted Swagger-UI
