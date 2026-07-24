@@ -21,8 +21,10 @@ See [REQUIREMENTS.md](./REQUIREMENTS.md) for the full concept and roadmap.
 From your Node-RED user directory (`~/.node-red`):
 
 ```bash
-npm install /path/to/node-red-contrib-openapi
+npm install ollixx/node-red-contrib-openapi
 ```
+
+…or from a local checkout: `npm install /path/to/node-red-contrib-openapi`.
 
 Requires Node.js ≥ 18 and Node-RED ≥ 3.0.
 

@@ -12,7 +12,15 @@
     "validation"
   ],
   "license": "MIT",
-  "author": "ollix",
+  "author": "ollixx <2682483+ollixx@users.noreply.github.com> (https://github.com/ollixx)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ollixx/node-red-contrib-openapi.git"
+  },
+  "homepage": "https://github.com/ollixx/node-red-contrib-openapi#readme",
+  "bugs": {
+    "url": "https://github.com/ollixx/node-red-contrib-openapi/issues"
+  },
   "files": [
     "nodes/",
     "lib/",
