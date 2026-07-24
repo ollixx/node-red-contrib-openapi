@@ -1,0 +1,290 @@
+[
+  {
+    "id": "tab_tasks",
+    "type": "tab",
+    "label": "Task Manager API",
+    "disabled": false,
+    "info": "OpenAPI-first task API — see docs/examples/task-manager.md"
+  },
+  {
+    "id": "cfg_tasks",
+    "type": "openapi-config",
+    "name": "Task API",
+    "source": "inline",
+    "inline": "{\n  \"openapi\": \"3.0.3\",\n  \"info\": {\n    \"title\": \"Task Manager API\",\n    \"version\": \"1.0.0\",\n    \"description\": \"Showcase for node-red-contrib-openapi.\"\n  },\n  \"servers\": [\n    {\n      \"url\": \"/api/v1\"\n    }\n  ],\n  \"components\": {\n    \"securitySchemes\": {\n      \"ApiKeyAuth\": {\n        \"type\": \"apiKey\",\n        \"in\": \"header\",\n        \"name\": \"X-API-Key\"\n      },\n      \"BearerAuth\": {\n        \"type\": \"http\",\n        \"scheme\": \"bearer\",\n        \"bearerFormat\": \"JWT\"\n      }\n    },\n    \"schemas\": {\n      \"Task\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"id\",\n          \"title\",\n          \"status\",\n          \"priority\"\n        ],\n        \"properties\": {\n          \"id\": {\n            \"type\": \"integer\"\n          },\n          \"title\": {\n            \"type\": \"string\",\n            \"minLength\": 1\n          },\n          \"status\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"open\",\n              \"done\"\n            ]\n          },\n          \"priority\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"low\",\n              \"medium\",\n              \"high\"\n            ]\n          }\n        }\n      },\n      \"NewTask\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"title\"\n        ],\n        \"properties\": {\n          \"title\": {\n            \"type\": \"string\",\n            \"minLength\": 1\n          },\n          \"status\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"open\",\n              \"done\"\n            ]\n          },\n          \"priority\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"low\",\n              \"medium\",\n              \"high\"\n            ]\n          }\n        }\n      },\n      \"Problem\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"type\": {\n            \"type\": \"string\"\n          },\n          \"title\": {\n            \"type\": \"string\"\n          },\n          \"status\": {\n            \"type\": \"integer\"\n          },\n          \"detail\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  },\n  \"paths\": {\n    \"/tasks\": {\n      \"get\": {\n        \"operationId\": \"listTasks\",\n        \"summary\": \"List tasks\",\n        \"security\": [\n          {\n            \"ApiKeyAuth\": []\n          }\n        ],\n        \"parameters\": [\n          {\n            \"name\": \"status\",\n            \"in\": \"query\",\n            \"schema\": {\n              \"type\": \"string\",\n              \"enum\": [\n                \"open\",\n                \"done\"\n              ]\n            }\n          },\n          {\n            \"name\": \"q\",\n            \"in\": \"query\",\n            \"schema\": {\n              \"type\": \"string\"\n            }\n          },\n          {\n            \"name\": \"limit\",\n            \"in\": \"query\",\n            \"schema\": {\n              \"type\": \"integer\",\n              \"minimum\": 1,\n              \"maximum\": 100\n            }\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"ok\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"type\": \"array\",\n                  \"items\": {\n                    \"$ref\": \"#/components/schemas/Task\"\n                  }\n                }\n              }\n            }\n          }\n        }\n      },\n      \"post\": {\n        \"operationId\": \"createTask\",\n        \"summary\": \"Create a task (needs scope tasks:write)\",\n        \"security\": [\n          {\n            \"BearerAuth\": [\n              \"tasks:write\"\n            ]\n          }\n        ],\n        \"requestBody\": {\n          \"required\": true,\n          \"content\": {\n            \"application/json\": {\n              \"schema\": {\n                \"$ref\": \"#/components/schemas/NewTask\"\n              }\n            }\n          }\n        },\n        \"responses\": {\n          \"201\": {\n            \"description\": \"created\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Task\"\n                }\n              }\n            }\n          },\n          \"400\": {\n            \"description\": \"bad request\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Problem\"\n                }\n              }\n            }\n          }\n        }\n      }\n    },\n    \"/tasks/{taskId}\": {\n      \"parameters\": [\n        {\n          \"name\": \"taskId\",\n          \"in\": \"path\",\n          \"required\": true,\n          \"schema\": {\n            \"type\": \"integer\"\n          }\n        }\n      ],\n      \"get\": {\n        \"operationId\": \"getTask\",\n        \"summary\": \"Get a task by id\",\n        \"security\": [\n          {\n            \"ApiKeyAuth\": []\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"ok\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Task\"\n                }\n              }\n            }\n          },\n          \"404\": {\n            \"description\": \"not found\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Problem\"\n                }\n              }\n            }\n          }\n        }\n      },\n      \"put\": {\n        \"operationId\": \"updateTask\",\n        \"summary\": \"Update a task (needs scope tasks:write)\",\n        \"security\": [\n          {\n            \"BearerAuth\": [\n              \"tasks:write\"\n            ]\n          }\n        ],\n        \"requestBody\": {\n          \"required\": true,\n          \"content\": {\n            \"application/json\": {\n              \"schema\": {\n                \"$ref\": \"#/components/schemas/NewTask\"\n              }\n            }\n          }\n        },\n        \"responses\": {\n          \"200\": {\n            \"description\": \"ok\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Task\"\n                }\n              }\n            }\n          },\n          \"404\": {\n            \"description\": \"not found\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Problem\"\n                }\n              }\n            }\n          }\n        }\n      },\n      \"delete\": {\n        \"operationId\": \"deleteTask\",\n        \"summary\": \"Delete a task (needs scope tasks:admin)\",\n        \"security\": [\n          {\n            \"BearerAuth\": [\n              \"tasks:admin\"\n            ]\n          }\n        ],\n        \"responses\": {\n          \"204\": {\n            \"description\": \"deleted\"\n          },\n          \"404\": {\n            \"description\": \"not found\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Problem\"\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+    "file": "",
+    "url": "",
+    "contextKey": "",
+    "contextStore": "",
+    "authMode": "enforce",
+    "metaJson": true,
+    "metaYaml": true,
+    "metaDocs": true
+  },
+  {
+    "id": "seed",
+    "type": "inject",
+    "z": "tab_tasks",
+    "name": "seed store",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "0.2",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 150,
+    "y": 60,
+    "wires": [
+      [
+        "fn_seed"
+      ]
+    ]
+  },
+  {
+    "id": "fn_seed",
+    "type": "function",
+    "z": "tab_tasks",
+    "name": "seed tasks",
+    "outputs": 0,
+    "x": 360,
+    "y": 60,
+    "wires": [],
+    "func": "if (!flow.get('tasks')) {\n  flow.set('tasks', [\n    { id: 1, title: 'Write the OpenAPI spec', status: 'done', priority: 'high' },\n    { id: 2, title: 'Wire up the flow', status: 'open', priority: 'medium' }\n  ]);\n  flow.set('nextId', 3);\n}\nreturn null;"
+  },
+  {
+    "id": "in_list",
+    "type": "openapi-in",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "operation": "listTasks",
+    "onError": "respond",
+    "maxBodyBytes": 1048576,
+    "x": 150,
+    "y": 160,
+    "wires": [
+      [
+        "fn_list"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "fn_list",
+    "type": "function",
+    "z": "tab_tasks",
+    "name": "list",
+    "outputs": 1,
+    "x": 380,
+    "y": 160,
+    "wires": [
+      [
+        "resp_list"
+      ]
+    ],
+    "func": "const tasks = flow.get('tasks') || [];\nconst { status, q, limit } = msg.parameters.query;\nlet out = tasks;\nif (status) out = out.filter(t => t.status === status);\nif (q) out = out.filter(t => t.title.toLowerCase().includes(String(q).toLowerCase()));\nif (limit) out = out.slice(0, limit);\nmsg.statusCode = 200; msg.payload = out;\nreturn msg;"
+  },
+  {
+    "id": "resp_list",
+    "type": "openapi-response",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "validation": "warn",
+    "errorFormat": "problem",
+    "defaultStatus": 200,
+    "x": 610,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "in_get",
+    "type": "openapi-in",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "operation": "getTask",
+    "onError": "respond",
+    "maxBodyBytes": 1048576,
+    "x": 150,
+    "y": 240,
+    "wires": [
+      [
+        "fn_get"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "fn_get",
+    "type": "function",
+    "z": "tab_tasks",
+    "name": "get",
+    "outputs": 1,
+    "x": 380,
+    "y": 240,
+    "wires": [
+      [
+        "resp_get"
+      ]
+    ],
+    "func": "const tasks = flow.get('tasks') || [];\nconst id = msg.parameters.path.taskId;\nconst task = tasks.find(t => t.id === id);\nif (!task) { msg.error = { statusCode: 404, title: 'Not Found', detail: 'no task ' + id }; }\nelse { msg.statusCode = 200; msg.payload = task; }\nreturn msg;"
+  },
+  {
+    "id": "resp_get",
+    "type": "openapi-response",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "validation": "warn",
+    "errorFormat": "problem",
+    "defaultStatus": 200,
+    "x": 610,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "in_create",
+    "type": "openapi-in",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "operation": "createTask",
+    "onError": "respond",
+    "maxBodyBytes": 4096,
+    "x": 150,
+    "y": 320,
+    "wires": [
+      [
+        "fn_create"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "fn_create",
+    "type": "function",
+    "z": "tab_tasks",
+    "name": "create",
+    "outputs": 1,
+    "x": 380,
+    "y": 320,
+    "wires": [
+      [
+        "resp_create"
+      ]
+    ],
+    "func": "const tasks = flow.get('tasks') || [];\nconst id = flow.get('nextId') || (tasks.length + 1);\nconst task = Object.assign({ id, status: 'open', priority: 'medium' }, msg.payload);\ntasks.push(task); flow.set('tasks', tasks); flow.set('nextId', id + 1);\nmsg.statusCode = 201; msg.payload = task;\nreturn msg;"
+  },
+  {
+    "id": "resp_create",
+    "type": "openapi-response",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "validation": "warn",
+    "errorFormat": "problem",
+    "defaultStatus": 200,
+    "x": 610,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "in_update",
+    "type": "openapi-in",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "operation": "updateTask",
+    "onError": "respond",
+    "maxBodyBytes": 1048576,
+    "x": 150,
+    "y": 400,
+    "wires": [
+      [
+        "fn_update"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "fn_update",
+    "type": "function",
+    "z": "tab_tasks",
+    "name": "update",
+    "outputs": 1,
+    "x": 380,
+    "y": 400,
+    "wires": [
+      [
+        "resp_update"
+      ]
+    ],
+    "func": "const tasks = flow.get('tasks') || [];\nconst id = msg.parameters.path.taskId;\nconst idx = tasks.findIndex(t => t.id === id);\nif (idx < 0) { msg.error = { statusCode: 404, title: 'Not Found', detail: 'no task ' + id }; return msg; }\ntasks[idx] = Object.assign({}, tasks[idx], msg.payload, { id });\nflow.set('tasks', tasks);\nmsg.statusCode = 200; msg.payload = tasks[idx];\nreturn msg;"
+  },
+  {
+    "id": "resp_update",
+    "type": "openapi-response",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "validation": "warn",
+    "errorFormat": "problem",
+    "defaultStatus": 200,
+    "x": 610,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "in_delete",
+    "type": "openapi-in",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "operation": "deleteTask",
+    "onError": "respond",
+    "maxBodyBytes": 1048576,
+    "x": 150,
+    "y": 480,
+    "wires": [
+      [
+        "fn_delete"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "fn_delete",
+    "type": "function",
+    "z": "tab_tasks",
+    "name": "delete",
+    "outputs": 1,
+    "x": 380,
+    "y": 480,
+    "wires": [
+      [
+        "resp_delete"
+      ]
+    ],
+    "func": "const tasks = flow.get('tasks') || [];\nconst id = msg.parameters.path.taskId;\nconst idx = tasks.findIndex(t => t.id === id);\nif (idx < 0) { msg.error = { statusCode: 404, title: 'Not Found', detail: 'no task ' + id }; return msg; }\ntasks.splice(idx, 1); flow.set('tasks', tasks);\nmsg.statusCode = 204; msg.payload = undefined;\nreturn msg;"
+  },
+  {
+    "id": "resp_delete",
+    "type": "openapi-response",
+    "z": "tab_tasks",
+    "name": "",
+    "server": "cfg_tasks",
+    "validation": "warn",
+    "errorFormat": "problem",
+    "defaultStatus": 200,
+    "x": 610,
+    "y": 480,
+    "wires": []
+  }
+]

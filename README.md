@@ -46,6 +46,14 @@ msg.req, msg.res // Express objects, consumed by openapi-response
 To respond, set `msg.statusCode` + `msg.payload`, or set `msg.error` for a
 spec-shaped error. See `examples/flow.json` for a working Petstore flow.
 
+## Examples
+
+- `examples/flow.json` — minimal Petstore (get/create).
+- `examples/task-manager.json` — a **self-contained showcase** (inline spec) that
+  exercises everything: apiKey **and** bearer-JWT auth with per-operation scopes,
+  path/query/body validation, RFC 7807 errors, 204, and the self-hosted Swagger-UI.
+  Walkthrough + curl cheat sheet: [docs/examples/task-manager.md](docs/examples/task-manager.md).
+
 ## Development
 
 ```bash
