@@ -16,7 +16,7 @@ verify: unit
 spec: docs/nodes/openapi-in.md
 tests: test/openapi-in.tests.md
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P15 — Body-Size-Limit ist Node-RED-Sache
