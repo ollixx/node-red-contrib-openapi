@@ -4,6 +4,18 @@ All notable changes to `node-red-contrib-openapi` are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/); this project
 uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Regression coverage for the shipped `examples/task-manager.json` showcase: a test
+  loads the real file and drives its security-critical paths (apiKey + bearer JWT +
+  per-operation scope + body validation), so a node change that breaks the example
+  turns the suite red.
+
+### Fixed
+- Removed stale `maxBodyBytes` fields from `examples/task-manager.json` (the field was
+  removed from `openapi-in` in 0.9.0).
+
 ## [0.9.0] — 2026-07-24
 
 Feature-complete **beta**. OpenAPI-first HTTP server nodes for Node-RED: an OpenAPI

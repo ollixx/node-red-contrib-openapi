@@ -65,7 +65,6 @@
     "server": "cfg_tasks",
     "operation": "listTasks",
     "onError": "respond",
-    "maxBodyBytes": 1048576,
     "x": 150,
     "y": 160,
     "wires": [
@@ -111,7 +110,6 @@
     "server": "cfg_tasks",
     "operation": "getTask",
     "onError": "respond",
-    "maxBodyBytes": 1048576,
     "x": 150,
     "y": 240,
     "wires": [
@@ -157,7 +155,6 @@
     "server": "cfg_tasks",
     "operation": "createTask",
     "onError": "respond",
-    "maxBodyBytes": 4096,
     "x": 150,
     "y": 320,
     "wires": [
@@ -203,7 +200,6 @@
     "server": "cfg_tasks",
     "operation": "updateTask",
     "onError": "respond",
-    "maxBodyBytes": 1048576,
     "x": 150,
     "y": 400,
     "wires": [
@@ -249,7 +245,6 @@
     "server": "cfg_tasks",
     "operation": "deleteTask",
     "onError": "respond",
-    "maxBodyBytes": 1048576,
     "x": 150,
     "y": 480,
     "wires": [

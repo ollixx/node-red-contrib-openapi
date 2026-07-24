@@ -22,10 +22,11 @@ blocker clears.
 
 ## Open work (pending / in_progress)
 
-_(none — all pending packages are done. The post-MVP P3 set
-([ADR 0002](../adr/0002-post-mvp-feature-roadmap.md)) and the P15 body-limit cleanup
-([ADR 0003](../adr/0003-body-size-limit-is-node-red-owned.md)) are shipped; the six
-**deferred** packages below each start with their own `/evolve-roadmap` ADR.)_
+- **P16** — aspects/release — 0.9.0 auf npm veröffentlichen + in der Node-RED Flow Library listen (Owner-Aktion: `npm publish`) — [P16](aspects/release/P16-publish-to-npm-and-flow-library.md)
+
+The P3 feature set ([ADR 0002](../adr/0002-post-mvp-feature-roadmap.md)) and the P15
+body-limit cleanup ([ADR 0003](../adr/0003-body-size-limit-is-node-red-owned.md)) are
+done; the six **deferred** packages below each start with their own `/evolve-roadmap` ADR.
 
 ## Epics (where plans live)
 
@@ -47,6 +48,7 @@ epic). A package's file lives at the epic root while open, and `git mv`s into
 | [aspects/docs](aspects/docs/epic.md) | Node requirement docs + usage guides + README/REQUIREMENTS upkeep |
 | [aspects/mocking](aspects/mocking/epic.md) | Spec-based mocking (deferred — needs its own ADR) |
 | [aspects/observability](aspects/observability/epic.md) | Per-operation metrics/tracing (deferred — needs its own ADR) |
+| [aspects/release](aspects/release/epic.md) | Release/distribution ops — npm publish, flow-library listing, CI |
 
 ## Deferred (parked, not abandoned)
 
@@ -78,5 +80,6 @@ folder for the full history.
 | aspects/docs | 1 |
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
+| aspects/release | 0 |
 
-**Total: 9 done, 0 open, 6 deferred.**
+**Total: 9 done, 1 open, 6 deferred.**
