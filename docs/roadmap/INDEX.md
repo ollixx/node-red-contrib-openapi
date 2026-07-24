@@ -22,8 +22,14 @@ blocker clears.
 
 ## Open work (pending / in_progress)
 
-_(none — the foundation epic is drained. Author the next packages with
-`/evolve-roadmap`, or pick from the epic scopes below.)_
+Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
+
+- **P3** — foundation — Publishing-Hygiene: `package.json` `files`-Whitelist, nur Runtime-Artefakte im npm-Tarball — [P3](foundation/P3-publishing-hygiene.md)
+- **P4** — aspects/docs — Node-Requirement-Docs für `openapi-in` + `openapi-response` (Detail-Bar) — [P4](aspects/docs/P4-node-requirement-docs-in-response.md)
+- **P5** — aspects/meta-docs — Swagger-UI selbst hosten statt jsDelivr-CDN — [P5](aspects/meta-docs/P5-self-hosted-swagger-ui.md)
+- **P6** — nodes/openapi-response — Error-Responses (`msg.error`) gegen das Spec-Error-Schema validieren — [P6](nodes/openapi-response/P6-error-response-validation.md)
+- **P7** — aspects/auth — HTTP-Bearer: echte JWT-Verifikation (Shared Secret + JWKS) — [P7](aspects/auth/P7-bearer-jwt-verification.md)
+- **P8** — aspects/auth — Per-Operation Scope-Enforcement (403), hängt an P7 — [P8](aspects/auth/P8-scope-enforcement.md)
 
 ## Epics (where plans live)
 
@@ -42,12 +48,20 @@ epic). A package's file lives at the epic root while open, and `git mv`s into
 | [aspects/auth](aspects/auth/epic.md) | `lib/auth`: scheme extraction, OR/AND eval, enforce/extract, JWT/OAuth2 (roadmap) |
 | [aspects/meta-docs](aspects/meta-docs/epic.md) | `lib/meta`: openapi.json/yaml, Swagger-UI, self-hosting |
 | [aspects/lifecycle](aspects/lifecycle/epic.md) | `lib/routing`: path rewrite, register/remove, no orphan routes, Express compat |
+| [aspects/docs](aspects/docs/epic.md) | Node requirement docs + usage guides + README/REQUIREMENTS upkeep |
+| [aspects/mocking](aspects/mocking/epic.md) | Spec-based mocking (deferred — needs its own ADR) |
+| [aspects/observability](aspects/observability/epic.md) | Per-operation metrics/tracing (deferred — needs its own ADR) |
 
 ## Deferred (parked, not abandoned)
 
 Reason in each package's `deferred_reason`. Picked up once the blocker clears.
 
-_(none yet)_
+- **P9** — aspects/auth — OAuth2 / OIDC volle Flows + JWKS-Caching — *braucht eigene ADR (Flows/Provider/Caching); hängt an P7* — [P9](aspects/auth/deferred/P9-oauth2-oidc-flows.md)
+- **P10** — aspects/mocking — Spec-basiertes Mocking (Responses aus examples/Schema) — *braucht eigene ADR zur Mock-Semantik* — [P10](aspects/mocking/deferred/P10-spec-based-mocking.md)
+- **P11** — aspects/observability — Metriken/Tracing pro Operation — *braucht eigene ADR zur Backend-Wahl* — [P11](aspects/observability/deferred/P11-metrics-tracing.md)
+- **P12** — aspects/spec-handling — Swagger 2.0 als Eingabeformat — *braucht Konvertierungsstrategie-Entscheidung* — [P12](aspects/spec-handling/deferred/P12-swagger2-input.md)
+- **P13** — nodes/openapi-config — In-Editor Monaco-Spec-Editor — *große Editor-Feature; eigene ADR (Bundling/UX)* — [P13](nodes/openapi-config/deferred/P13-monaco-spec-editor.md)
+- **P14** — nodes/openapi-config — Credential-Eingaben pro securityScheme im Editor — *braucht editor-seitigen Spec-Zugriff + UX-Entscheidung (aus ADR 0001)* — [P14](nodes/openapi-config/deferred/P14-per-scheme-editor-rendering.md)
 
 ## Done (rollup — history lives in the epic folders)
 
@@ -65,5 +79,8 @@ folder for the full history.
 | aspects/auth | 0 |
 | aspects/meta-docs | 0 |
 | aspects/lifecycle | 0 |
+| aspects/docs | 0 |
+| aspects/mocking | 0 |
+| aspects/observability | 0 |
 
-**Total: 2 done, 0 open, 0 deferred.**
+**Total: 2 done, 6 open, 6 deferred.**
