@@ -16,14 +16,21 @@ verify: unit
 spec: docs/nodes/openapi-in.md
 tests: test/openapi-in.tests.md
 dependencies: []
-status: in_progress
+status: done
 ---
 
 # P15 — Body-Size-Limit ist Node-RED-Sache
 
-Motiviert durch [ADR 0003](../../../adr/0003-body-size-limit-is-node-red-owned.md)
+Motiviert durch [ADR 0003](../../../../adr/0003-body-size-limit-is-node-red-owned.md)
 (verfeinert die maxBodyBytes-Facette von P1.3, aufgedeckt beim task-manager-Showcase).
 
 Kein neues Verhalten, sondern Ehrlichkeit: das Feld weg, der Fallback-Parser behält eine
 feste interne Obergrenze, und die Doku verweist auf Node-REDs eigenes Limit. `lib/`
 bleibt unangetastet — reine Node-/Doku-Änderung in `openapi-in`.
+
+## Result
+
+**Delivered:** Das irreführende `maxBodyBytes`-Editor-Feld ist entfernt (openapi-in .html + .js config-Read). Der Body-Parser wurde nach `lib/body-parser.js` extrahiert (pure, node-red-frei) und läuft nur noch als Fallback mit fester interner 1-MB-Obergrenze; das Request-Body-Size-Limit ist nun explizit Node-REDs Sache (`apiMaxLength`/`httpNodeMiddleware`), dokumentiert in openapi-in.md, REQUIREMENTS §4, task-manager.md.
+**Stats:** 8 Dateien (lib/body-parser.js [neu], nodes/openapi-in.js, .html, REQUIREMENTS.md, docs/nodes/openapi-in.md, docs/examples/task-manager.md, test/body-parser_spec.js [neu, 5 Tests], test/openapi-in_spec.js [alter Feld-413-Test raus], test/openapi-in.tests.md); 87 Tests grün (vorher 83).
+**Notes:** Der P1.3-413-Test (feldbasiert) ist ersetzt durch Unit-Tests des Fallback-Parsers gegen die feste Obergrenze (simulierter Stream, kein 1-MB-Payload nötig). lib/ um eine reine, testbare Einheit erweitert (Architektur „Logik in lib/"). Refines P1.3 (ADR 0003).
+**Cost:** session bba0ab6b, ~3m

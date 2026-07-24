@@ -100,7 +100,7 @@ Standardmäßig aktiv, je einzeln abschaltbar:
 
 **Fehler- & Status-Feedback:** Jeder Node zeigt aussagekräftigen Node-Status (grün/gelb/rot) und loggt strukturiert.
 
-**Sicherheit:** Secrets nur über Node-RED-`credentials`. Keine Spec-Injektion von Prototypen. Body-Size-Limits konfigurierbar.
+**Sicherheit:** Secrets nur über Node-RED-`credentials`. Keine Spec-Injektion von Prototypen. Body-Size-Limits sind Node-RED-Sache (`apiMaxLength` / `httpNodeMiddleware`, vor dem Flow) — der Fallback-Parser in `openapi-in` hat nur eine feste interne Obergrenze (ADR 0003).
 
 **Kompatibilität:** Node-RED ≥ 3.x, Node.js ≥ 18. Nutzung von `RED.httpNode` (Express) für Routen; Respekt vor `httpNodeMiddleware`/`httpNodeRoot`.
 

@@ -37,21 +37,8 @@ describeIntegration("openapi-in", function () {
     helper.unload().then(() => helper.stopServer(done));
   });
 
-  it("rejects a request body larger than maxBodyBytes with 413", function (done) {
-    const flow = baseCfg([
-      { id: "in1", type: "openapi-in", server: "cfg", operation: "createPet", onError: "respond", maxBodyBytes: 20, wires: [[], []] },
-    ]);
-    helper.load([configNode, inNode], flow, function () {
-      setTimeout(() => {
-        httpNodeRequest()
-          .post("/api/v1/pets")
-          .set("X-API-Key", "k")
-          .send({ name: "a pet name that is definitely longer than twenty bytes" })
-          .expect(413)
-          .end(done);
-      }, 200);
-    });
-  });
+  // Body-size limiting is Node-RED's job (ADR 0003); the fallback parser's fixed
+  // internal cap is unit-tested in test/body-parser_spec.js.
 
   it("onError=output routes a validation failure to the 2nd output instead of responding", function (done) {
     const flow = baseCfg([

@@ -65,9 +65,9 @@ curl -s $B/openapi.json | head                      # meta spec (no auth)
 
 ## Notes
 
-- **Body-size limit caveat:** Node-RED installs its own JSON body-parser on the HTTP
-  node routes, so it parses (and size-limits, per `httpNodeMiddleware`/`apiMaxLength`)
-  the body **before** `openapi-in`. The node's own `maxBodyBytes` therefore only applies
-  when no upstream parser has already consumed the body (e.g. content-types Node-RED does
-  not parse). Rely on Node-RED's settings for the primary limit.
+- **Body-size limiting is Node-RED's job (ADR 0003):** Node-RED installs its own body
+  parser on the HTTP-node routes and applies its size limit (`apiMaxLength` /
+  `httpNodeMiddleware`) **before** `openapi-in`. `openapi-in` only keeps a fixed internal
+  cap on its fallback parser (for content-types Node-RED does not parse) — there is no
+  per-node body-size field. Configure the primary limit in Node-RED's settings.
 - Node docs: [openapi-config](../nodes/openapi-config.md) · [openapi-in](../nodes/openapi-in.md) · [openapi-response](../nodes/openapi-response.md).
