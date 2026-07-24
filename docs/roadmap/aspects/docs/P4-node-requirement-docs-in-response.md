@@ -10,7 +10,7 @@ acceptance:
   - "docs/nodes/README.md verlinkt beide Docs (keine _(tbd)_-Platzhalter mehr)."
   - "`npm run check:links` bleibt grün (alle Verweise auflösbar)."
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P4 — Node-Requirement-Docs für openapi-in / openapi-response
