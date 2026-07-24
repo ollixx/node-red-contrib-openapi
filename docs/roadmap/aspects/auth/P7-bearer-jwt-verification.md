@@ -15,7 +15,7 @@ verify: http
 spec: docs/nodes/openapi-config.md
 tests: test/openapi-config.tests.md
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P7 — Bearer-JWT-Verifikation
