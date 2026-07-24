@@ -11,6 +11,10 @@ uses [Semantic Versioning](https://semver.org/).
   loads the real file and drives its security-critical paths (apiKey + bearer JWT +
   per-operation scope + body validation), so a node change that breaks the example
   turns the suite red.
+- Node-level coverage for every `openapi-config` spec source (`file`, `url`, `context`) —
+  previously only `inline` was exercised end-to-end. Includes the node's `context`
+  resolution (`global.` prefix, object vs JSON-string values, clean failure on an
+  unresolved key).
 
 ### Fixed
 - Removed stale `maxBodyBytes` fields from `examples/task-manager.json` (the field was
