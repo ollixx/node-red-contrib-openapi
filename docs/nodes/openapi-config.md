@@ -49,6 +49,10 @@ endpoints, and **holds the authentication config** (ADR 0001 — there is no sep
   (signature + expiry): an invalid or expired token → `401` and, on success, the verified
   claims are in `msg.auth.claims`. Without a configured key the token is only extracted
   (presence accepted). Remote JWKS-URL verification + caching is roadmap (P9).
+  **Scope enforcement:** when the operation's security requires scopes, they are checked
+  against the verified token's `scope`/`scp` claim — a missing required scope →
+  `403` (authenticated but not authorized); `msg.auth.scopes` carries the token's
+  effective scopes.
 - **Accessors** for dependent nodes: `getOperation(id)`, `getPrefix()`,
   `getSecuritySchemes()`.
 - **Admin endpoint** `GET /openapi-config/:id/operations` (permission `flows.read`) —

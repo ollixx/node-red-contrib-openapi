@@ -78,6 +78,38 @@ describeIntegration("openapi-config bearer JWT verification (P7)", function () {
     });
   });
 
+  it("enforces required scopes on a verified token (403 when missing, pass when present, none required → no check)", function (done) {
+    helper.load([configNode], cfgFlow(), { cfg: { jwtSecret: SECRET } }, function () {
+      setTimeout(() => {
+        try {
+          const cfg = helper.getNode("cfg");
+          const schemes = cfg.getSecuritySchemes();
+
+          const withScope = sign({ sub: "u1", scope: "pets:read pets:write" }, SECRET, { expiresIn: "1h" });
+          const okr = cfg.authenticate([{ BearerAuth: ["pets:write"] }], schemes, mkReq({ Authorization: "Bearer " + withScope }));
+          assert.strictEqual(okr.ok, true);
+          assert.ok(okr.auth.scopes.includes("pets:write"), "effective token scopes surface in msg.auth.scopes");
+
+          const noScope = sign({ sub: "u1", scope: "pets:read" }, SECRET, { expiresIn: "1h" });
+          const denied = cfg.authenticate([{ BearerAuth: ["pets:write"] }], schemes, mkReq({ Authorization: "Bearer " + noScope }));
+          assert.strictEqual(denied.ok, false);
+          assert.strictEqual(denied.status, 403, "insufficient scope → 403, not 401");
+
+          // 'scp' array claim is also accepted
+          const scpArr = sign({ sub: "u1", scp: ["pets:write"] }, SECRET, { expiresIn: "1h" });
+          assert.strictEqual(cfg.authenticate([{ BearerAuth: ["pets:write"] }], schemes, mkReq({ Authorization: "Bearer " + scpArr })).ok, true);
+
+          // no required scopes → no scope check
+          const anyTok = sign({ sub: "u1" }, SECRET, { expiresIn: "1h" });
+          assert.strictEqual(cfg.authenticate([{ BearerAuth: [] }], schemes, mkReq({ Authorization: "Bearer " + anyTok })).ok, true);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 200);
+    });
+  });
+
   it("without a configured secret, a bearer token is only extracted (presence accepted, no claims)", function (done) {
     helper.load([configNode], cfgFlow(), {}, function () {
       setTimeout(() => {

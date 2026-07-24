@@ -13,14 +13,21 @@ verify: http
 spec: docs/nodes/openapi-config.md
 tests: test/openapi-config.tests.md
 dependencies: [P7]
-status: in_progress
+status: done
 ---
 
 # P8 — Scope-Enforcement pro Operation
 
-Motiviert durch [ADR 0002](../../../adr/0002-post-mvp-feature-roadmap.md) (Review-Fund P3.3, Teil 2).
+Motiviert durch [ADR 0002](../../../../adr/0002-post-mvp-feature-roadmap.md) (Review-Fund P3.3, Teil 2).
 
 Baut auf P7 (Bearer-JWT-Verifikation) auf: nachdem das JWT verifiziert ist, werden
 dessen Scopes gegen `requirement[schemeName]` (die geforderten Scopes) geprüft. Ergänzt
 `lib/auth` um einen Scope-Vergleich; die 401/403-Unterscheidung folgt der bestehenden
 Semantik (401 = nicht authentifiziert, 403 = authentifiziert aber unautorisiert).
+
+## Result
+
+**Delivered:** Per-Operation Scope-Enforcement in lib/auth: nach erfolgreicher Bearer-Verifikation werden die Token-Scopes (scope/scp-Claim) gegen die geforderten Scopes (requirement[scheme]) geprüft; fehlender Scope → 403 (authentifiziert, nicht autorisiert), unterscheidbar von 401; msg.auth.scopes trägt die effektiven Token-Scopes. Keine geforderten Scopes → keine Prüfung.
+**Stats:** 3 Dateien (lib/auth.js, test/auth_jwt_spec.js [+1 Test], docs+Katalog); 83 Tests grün (vorher 82).
+**Notes:** Nur bei verifizierten Claims erzwungen (unverifizierte Tokens haben keine vertrauenswürdigen Scopes). Abwärtskompatibel: ohne Claims bleibt auth.scopes = geforderte Scopes (bestehende Extract-Tests unverändert grün). scope (space-separated) und scp (Array/String) unterstützt.
+**Cost:** session bba0ab6b, ~3m

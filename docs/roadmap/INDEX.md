@@ -24,7 +24,8 @@ blocker clears.
 
 Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
 
-- **P8** — aspects/auth — Per-Operation Scope-Enforcement (403), hängt an P7 — [P8](aspects/auth/P8-scope-enforcement.md)
+_(none — all pending P3 packages are done. What remains is the six **deferred**
+packages below, each of which starts with its own `/evolve-roadmap` ADR.)_
 
 ## Epics (where plans live)
 
@@ -71,11 +72,11 @@ folder for the full history.
 | nodes/openapi-response | 1 |
 | aspects/spec-handling | 0 |
 | aspects/validation | 0 |
-| aspects/auth | 1 |
+| aspects/auth | 2 |
 | aspects/meta-docs | 1 |
 | aspects/lifecycle | 0 |
 | aspects/docs | 1 |
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
 
-**Total: 7 done, 1 open, 6 deferred.**
+**Total: 8 done, 0 open, 6 deferred.**

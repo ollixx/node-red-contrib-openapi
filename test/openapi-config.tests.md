@@ -25,6 +25,7 @@ Per `.ai/agents/node-testing.md`. Kept current when the tests change.
 | verifies a valid HS256 token (claims surfaced), rejects expired/wrong/missing | With `jwtSecret` set, `cfg.authenticate` on a bearer requirement verifies signature + expiry; valid → ok + `auth.claims`; expired/wrong/missing → 401. |
 | without a configured secret, a bearer token is only extracted | No key configured → presence accepted, `auth.claims` null (backward compatible). |
 | HTTP: bearer-secured operation passes with a valid token and 401s an expired one | End-to-end via `openapi-in`: expired → 401, valid → 200 with verified claims in `msg.auth`. |
+| enforces required scopes on a verified token (P8) | Required scope present → pass with `auth.scopes` = token scopes; missing → 403 (not 401); `scp` array accepted; no required scopes → no check. |
 
 ## Related coverage
 - `test/routing_auth_spec.js` — unit tests of `lib/auth.authenticate` across all schemes (the logic the config node delegates to).
