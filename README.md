@@ -1,5 +1,7 @@
 # node-red-contrib-openapi
 
+[![CI](https://github.com/ollixx/node-red-contrib-openapi/actions/workflows/ci.yml/badge.svg)](https://github.com/ollixx/node-red-contrib-openapi/actions/workflows/ci.yml)
+
 OpenAPI-first HTTP-server nodes for Node-RED. Keep an OpenAPI specification as the
 source of truth and let Node-RED realize its endpoints: incoming requests are
 authenticated and validated against the spec, handed to the flow as a clean

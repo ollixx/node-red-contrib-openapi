@@ -15,6 +15,8 @@ uses [Semantic Versioning](https://semver.org/).
   previously only `inline` was exercised end-to-end. Includes the node's `context`
   resolution (`global.` prefix, object vs JSON-string values, clean failure on an
   unresolved key).
+- GitHub Actions CI: `npm run validate` (tripwires + full test suite) on push and pull
+  request, across Node 18 / 20 / 22.
 
 ### Fixed
 - Removed stale `maxBodyBytes` fields from `examples/task-manager.json` (the field was
