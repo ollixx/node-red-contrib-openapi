@@ -16,7 +16,9 @@
     },
     credentials: {
       apiKeys: { type: "text" },
-      basicUsers: { type: "text" }
+      basicUsers: { type: "text" },
+      jwtSecret: { type: "text" },
+      jwtPublicKey: { type: "text" }
     },
     label: function () {
       return this.name || "openapi spec";
@@ -86,6 +88,15 @@
     <label style="vertical-align:top" for="node-config-input-basicUsers"><i class="fa fa-user"></i> Basic users</label>
     <textarea id="node-config-input-basicUsers" rows="3" style="width:70%;font-family:monospace"
       placeholder="user:password per line"></textarea>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-jwtSecret"><i class="fa fa-lock"></i> JWT secret</label>
+    <input type="text" id="node-config-input-jwtSecret" placeholder="HS256 shared secret (bearer)">
+  </div>
+  <div class="form-row">
+    <label style="vertical-align:top" for="node-config-input-jwtPublicKey"><i class="fa fa-certificate"></i> JWT public key</label>
+    <textarea id="node-config-input-jwtPublicKey" rows="3" style="width:70%;font-family:monospace"
+      placeholder="-----BEGIN PUBLIC KEY----- (RS256/ES256; takes precedence over the secret)"></textarea>
   </div>
   <div class="form-row">
     <label><i class="fa fa-globe"></i> Meta endpoints</label>

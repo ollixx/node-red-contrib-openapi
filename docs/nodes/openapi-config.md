@@ -26,6 +26,8 @@ endpoints, and **holds the authentication config** (ADR 0001 — there is no sep
 |---|---|---|
 | `apiKeys` | text | Allow-list of accepted API-key values, one per line or comma-separated. In `enforce` mode an `apiKey` scheme passes only if the presented key is in this list; an empty list means "presence is enough". |
 | `basicUsers` | text | `user:password` per line. In `enforce` mode an `http basic` scheme passes only if the presented pair matches. |
+| `jwtSecret` | text | HS256 shared secret for verifying bearer JWTs. When set (and `enforce`), a bearer token is verified (signature + expiry). |
+| `jwtPublicKey` | text (PEM) | RS256/ES256 public key for verifying bearer JWTs; **takes precedence** over `jwtSecret`. Remote JWKS-URL verification is roadmap (P9). |
 
 ## Behaviour
 
@@ -41,8 +43,12 @@ endpoints, and **holds the authentication config** (ADR 0001 — there is no sep
   with `authMode` + the credentials above. Returns
   `{ ok, status?, auth: { scheme, token, claims, scopes, principal }, error? }`.
   No security on the operation → open (`ok: true`). Missing credential → `401`;
-  present-but-rejected → `403`. Supported schemes: `apiKey` (header/query/cookie),
-  `http basic`, `http`/`oauth2`/`oidc` bearer (extracted; full verification is Roadmap).
+  a rejected api-key/basic credential → `403`. Supported schemes: `apiKey`
+  (header/query/cookie), `http basic`, and `http`/`oauth2`/`oidc` **bearer** — when a
+  `jwtSecret` (HS256) or `jwtPublicKey` (RS256/ES256) is configured the JWT is verified
+  (signature + expiry): an invalid or expired token → `401` and, on success, the verified
+  claims are in `msg.auth.claims`. Without a configured key the token is only extracted
+  (presence accepted). Remote JWKS-URL verification + caching is roadmap (P9).
 - **Accessors** for dependent nodes: `getOperation(id)`, `getPrefix()`,
   `getSecuritySchemes()`.
 - **Admin endpoint** `GET /openapi-config/:id/operations` (permission `flows.read`) —

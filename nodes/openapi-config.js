@@ -26,6 +26,10 @@ module.exports = function (RED) {
       mode: node.authMode,
       apiKeys: parseList(creds.apiKeys),
       basicUsers: parseUserMap(creds.basicUsers),
+      // Bearer JWT verification (P7): HS256 shared secret or a PEM public key
+      // (RS256/ES256). null when unconfigured → tokens are only extracted.
+      // Remote JWKS-URL verification is P9 (needs async fetch + caching).
+      verifyBearer: makeBearerVerifier(creds.jwtSecret, creds.jwtPublicKey),
     };
 
     node.meta = {
@@ -121,6 +125,32 @@ module.exports = function (RED) {
     setTimeout(() => node.load(), 0);
   }
 
+  /**
+   * Build a synchronous bearer-token verifier from a shared secret (HS256) or a
+   * PEM public key (RS256/ES256). Returns null when neither is configured (auth
+   * then only extracts the token). Verifies signature + expiry; on failure the
+   * scheme is not satisfied. Algorithms are pinned to avoid alg-confusion.
+   */
+  function makeBearerVerifier(secret, publicKey) {
+    if (!secret && !publicKey) return null;
+    let jwt;
+    try {
+      jwt = require("jsonwebtoken");
+    } catch (e) {
+      return null;
+    }
+    return function verifyBearer(token) {
+      try {
+        if (publicKey) {
+          return { ok: true, claims: jwt.verify(token, publicKey, { algorithms: ["RS256", "ES256"] }) };
+        }
+        return { ok: true, claims: jwt.verify(token, secret, { algorithms: ["HS256"] }) };
+      } catch (e) {
+        return { ok: false, reason: e.message };
+      }
+    };
+  }
+
   function parseList(raw) {
     if (!raw) return [];
     return String(raw)
@@ -146,6 +176,8 @@ module.exports = function (RED) {
     credentials: {
       apiKeys: { type: "text" },
       basicUsers: { type: "text" },
+      jwtSecret: { type: "text" },
+      jwtPublicKey: { type: "text" },
     },
   });
 

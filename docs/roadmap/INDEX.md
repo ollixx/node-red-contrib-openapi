@@ -24,7 +24,6 @@ blocker clears.
 
 Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
 
-- **P7** — aspects/auth — HTTP-Bearer: echte JWT-Verifikation (Shared Secret + JWKS) — [P7](aspects/auth/P7-bearer-jwt-verification.md)
 - **P8** — aspects/auth — Per-Operation Scope-Enforcement (403), hängt an P7 — [P8](aspects/auth/P8-scope-enforcement.md)
 
 ## Epics (where plans live)
@@ -72,11 +71,11 @@ folder for the full history.
 | nodes/openapi-response | 1 |
 | aspects/spec-handling | 0 |
 | aspects/validation | 0 |
-| aspects/auth | 0 |
+| aspects/auth | 1 |
 | aspects/meta-docs | 1 |
 | aspects/lifecycle | 0 |
 | aspects/docs | 1 |
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
 
-**Total: 6 done, 2 open, 6 deferred.**
+**Total: 7 done, 1 open, 6 deferred.**

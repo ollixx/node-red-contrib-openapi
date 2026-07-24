@@ -19,6 +19,13 @@ Per `.ai/agents/node-testing.md`. Kept current when the tests change.
 | secured operation → 403 when the credential is wrong | Same route with a wrong `X-API-Key` (enforce + allow-list) → 403. |
 | secured operation → passes with a valid credential and fills msg.auth | Correct `X-API-Key` + valid body → auth passes; the emitted `msg.auth.scheme === "ApiKeyAuth"` and `msg.auth.token` is the key; response 201. |
 
+## `test/auth_jwt_spec.js` (P7 — bearer JWT verification)
+| Test | Goal |
+|---|---|
+| verifies a valid HS256 token (claims surfaced), rejects expired/wrong/missing | With `jwtSecret` set, `cfg.authenticate` on a bearer requirement verifies signature + expiry; valid → ok + `auth.claims`; expired/wrong/missing → 401. |
+| without a configured secret, a bearer token is only extracted | No key configured → presence accepted, `auth.claims` null (backward compatible). |
+| HTTP: bearer-secured operation passes with a valid token and 401s an expired one | End-to-end via `openapi-in`: expired → 401, valid → 200 with verified claims in `msg.auth`. |
+
 ## Related coverage
 - `test/routing_auth_spec.js` — unit tests of `lib/auth.authenticate` across all schemes (the logic the config node delegates to).
 - `test/integration_spec.js` — meta endpoint + unsecured operation (getPet) request/validation path.

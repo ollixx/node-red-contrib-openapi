@@ -20,7 +20,7 @@ status: pending
 
 Motiviert durch [ADR 0002](../../../adr/0002-post-mvp-feature-roadmap.md) (Review-Fund P3.3, Teil 2).
 
-Baut auf [P7](P7-bearer-jwt-verification.md) auf: nachdem das JWT verifiziert ist, werden
+Baut auf P7 (Bearer-JWT-Verifikation) auf: nachdem das JWT verifiziert ist, werden
 dessen Scopes gegen `requirement[schemeName]` (die geforderten Scopes) geprüft. Ergänzt
 `lib/auth` um einen Scope-Vergleich; die 401/403-Unterscheidung folgt der bestehenden
 Semantik (401 = nicht authentifiziert, 403 = authentifiziert aber unautorisiert).
