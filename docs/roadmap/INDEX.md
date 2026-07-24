@@ -24,7 +24,6 @@ blocker clears.
 
 Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
 
-- **P4** — aspects/docs — Node-Requirement-Docs für `openapi-in` + `openapi-response` (Detail-Bar) — [P4](aspects/docs/P4-node-requirement-docs-in-response.md)
 - **P5** — aspects/meta-docs — Swagger-UI selbst hosten statt jsDelivr-CDN — [P5](aspects/meta-docs/P5-self-hosted-swagger-ui.md)
 - **P6** — nodes/openapi-response — Error-Responses (`msg.error`) gegen das Spec-Error-Schema validieren — [P6](nodes/openapi-response/P6-error-response-validation.md)
 - **P7** — aspects/auth — HTTP-Bearer: echte JWT-Verifikation (Shared Secret + JWKS) — [P7](aspects/auth/P7-bearer-jwt-verification.md)
@@ -78,8 +77,8 @@ folder for the full history.
 | aspects/auth | 0 |
 | aspects/meta-docs | 0 |
 | aspects/lifecycle | 0 |
-| aspects/docs | 0 |
+| aspects/docs | 1 |
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
 
-**Total: 3 done, 5 open, 6 deferred.**
+**Total: 4 done, 4 open, 6 deferred.**

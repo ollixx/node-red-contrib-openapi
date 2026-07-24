@@ -17,8 +17,8 @@ applies, the message it emits (or consumes), and the responses/errors it produce
 | Node | Doc | Test catalogue |
 |---|---|---|
 | `openapi-config` | [openapi-config.md](openapi-config.md) | `test/openapi-config.tests.md` |
-| `openapi-in` | `openapi-in.md` _(tbd)_ | `test/openapi-in.tests.md` |
-| `openapi-response` | `openapi-response.md` _(tbd)_ | `test/openapi-response.tests.md` |
+| `openapi-in` | [openapi-in.md](openapi-in.md) | `test/openapi-in.tests.md` |
+| `openapi-response` | [openapi-response.md](openapi-response.md) | `test/openapi-response.tests.md` |
 
 These files are created as node phases build them out — this repo intentionally does not
 ship empty stubs (a stub would violate the detail bar).
