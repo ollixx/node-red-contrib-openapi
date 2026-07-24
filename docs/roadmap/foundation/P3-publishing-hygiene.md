@@ -10,7 +10,7 @@ acceptance:
   - "Die Nodes laden nach einem simulierten Install weiterhin (nodes/ + lib/ + package.json node-red-Sektion sind vollständig enthalten)."
 verify: unit
 dependencies: []
-status: pending
+status: in_progress
 ---
 
 # P3 — Publishing-Hygiene
