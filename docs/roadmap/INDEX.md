@@ -24,7 +24,6 @@ blocker clears.
 
 Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
 
-- **P3** — foundation — Publishing-Hygiene: `package.json` `files`-Whitelist, nur Runtime-Artefakte im npm-Tarball — [P3](foundation/P3-publishing-hygiene.md)
 - **P4** — aspects/docs — Node-Requirement-Docs für `openapi-in` + `openapi-response` (Detail-Bar) — [P4](aspects/docs/P4-node-requirement-docs-in-response.md)
 - **P5** — aspects/meta-docs — Swagger-UI selbst hosten statt jsDelivr-CDN — [P5](aspects/meta-docs/P5-self-hosted-swagger-ui.md)
 - **P6** — nodes/openapi-response — Error-Responses (`msg.error`) gegen das Spec-Error-Schema validieren — [P6](nodes/openapi-response/P6-error-response-validation.md)
@@ -70,7 +69,7 @@ folder for the full history.
 
 | Epic | done |
 |---|---|
-| foundation | 2 |
+| foundation | 3 |
 | nodes/openapi-config | 0 |
 | nodes/openapi-in | 0 |
 | nodes/openapi-response | 0 |
@@ -83,4 +82,4 @@ folder for the full history.
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
 
-**Total: 2 done, 6 open, 6 deferred.**
+**Total: 3 done, 5 open, 6 deferred.**
