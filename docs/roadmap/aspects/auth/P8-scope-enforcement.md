@@ -13,7 +13,7 @@ verify: http
 spec: docs/nodes/openapi-config.md
 tests: test/openapi-config.tests.md
 dependencies: [P7]
-status: pending
+status: in_progress
 ---
 
 # P8 — Scope-Enforcement pro Operation
