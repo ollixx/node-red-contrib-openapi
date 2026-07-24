@@ -22,10 +22,10 @@ blocker clears.
 
 ## Open work (pending / in_progress)
 
-Post-MVP feature set, planned by [ADR 0002](../adr/0002-post-mvp-feature-roadmap.md).
+- **P15** — nodes/openapi-in — `maxBodyBytes`-Feld entfernen; Body-Size-Limit ist Node-RED-Sache (ADR 0003, aufgedeckt beim task-manager-Showcase) — [P15](nodes/openapi-in/P15-body-limit-is-node-red-owned.md)
 
-_(none — all pending P3 packages are done. What remains is the six **deferred**
-packages below, each of which starts with its own `/evolve-roadmap` ADR.)_
+The post-MVP P3 set ([ADR 0002](../adr/0002-post-mvp-feature-roadmap.md)) is fully done;
+the six **deferred** packages below each start with their own `/evolve-roadmap` ADR.
 
 ## Epics (where plans live)
 
@@ -79,4 +79,4 @@ folder for the full history.
 | aspects/mocking | 0 |
 | aspects/observability | 0 |
 
-**Total: 8 done, 0 open, 6 deferred.**
+**Total: 8 done, 1 open, 6 deferred.**

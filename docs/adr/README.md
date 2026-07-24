@@ -15,3 +15,4 @@ ADR that motivated them.
 |---|---|
 | [0001](0001-auth-config-not-separate-node.md) | Auth is configured **in** the config node, not as a separate `openapi-auth` node. |
 | [0002](0002-post-mvp-feature-roadmap.md) | Plan the post-MVP (P3) feature set as roadmap packages, split pending vs deferred. |
+| [0003](0003-body-size-limit-is-node-red-owned.md) | Request body-size limiting is Node-RED's job; remove the bypassed `maxBodyBytes` field. |
